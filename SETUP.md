@@ -1,57 +1,63 @@
-# Tanbir Hasan Portfolio — Secure CMS Setup
+# Tanbir Hasan Portfolio — Final Setup
 
-This package keeps the public portfolio on GitHub Pages and uses Supabase for the private admin system, database, authentication, MFA and file storage.
+## 1. Supabase
 
-## 1. Create a Supabase project
-Create a project at https://supabase.com/.
+Run `supabase/schema.sql` in Supabase Dashboard → SQL Editor. The script is idempotent for the existing tables and adds the archive file-role columns.
 
-## 2. Create the database and storage rules
-Open **SQL Editor** in Supabase and run the complete file:
+## 2. Browser-safe configuration
 
-`supabase/schema.sql`
+Open `supabase-config.js` and replace the two placeholders with your Supabase **Project URL** and **Publishable key**. Do not use a secret/service-role key.
 
-## 3. Create your admin user
-In Supabase Dashboard → Authentication → Users, create your own user with email/password.
+## 3. Admin
 
-Then make the account an admin by setting either:
-- user metadata: `{ "admin": true }`, or
-- app metadata: `{ "role": "admin" }`
+Use the existing Supabase admin account with App metadata `{ "role": "admin" }`. Open `/admin/`, sign in, and complete TOTP setup if it has not already been enrolled.
 
-Use app metadata if you want the role to be harder for a user to alter themselves.
+## 4. Add projects
 
-## 4. Turn on MFA
-For the admin account, enroll a TOTP authenticator (Google Authenticator, Authy, 1Password, etc.). The CMS requires an `aal2` session before management actions are accepted.
+In Admin → Add new item:
 
-## 5. Configure the browser client
-Copy the values from Supabase Dashboard → Project Settings → API into `supabase-config.js`.
+- Type: Project
+- Archive / Category: CAD, CFD, FEA, or Robotics & Projects
+- Thumbnail / cover image: image used on archive cards
+- Gallery / result images: screenshots/photos/results
+- 3D model: GLB/GLTF for the interactive CAD viewer
+- Videos / animations: MP4/WebM/MOV
+- Engineering files / documents: SLDPRT, SLDASM, STEP, IGES, STL, DWG, DXF, ZIP, PDF, Python, Jupyter notebooks, datasets, presentations, etc.
 
-Only use the browser-safe publishable/anon key. **Never** use the service_role/secret key in this repository.
+## 5. Publish
 
-## 6. Test locally
-Because this is a static site, serve the folder with any local static server rather than opening `index.html` directly. Example with Python:
+Commit/upload all files in this package to the root of your GitHub Pages repository.
 
-```bash
-python -m http.server 8000
-```
+The public pages are:
 
-Then open:
+- `/`
+- `/cad.html`
+- `/cfd.html`
+- `/fea.html`
+- `/robotics-projects.html`
+- `/project.html?category=cad&slug=...` (generated automatically)
+- `/admin/`
 
-`http://localhost:8000/`
+## 6. Important
 
-Admin:
+A file uploaded to `portfolio-public` is publicly readable. Keep passwords, API keys, private documents and other secrets out of the public bucket.
 
-`http://localhost:8000/admin/`
 
-## 7. GitHub Pages
-Push the portfolio folder to your public GitHub repository and enable GitHub Pages from the repository's Settings → Pages.
+## Credentials archive
 
-## Security model
-- Public visitors can read only rows where `published = true`.
-- Only the authenticated admin can create/update/delete content.
-- Database management operations require MFA (`aal2`).
-- Public file bucket is readable by visitors but writable only by MFA-authenticated users.
-- Private file bucket requires MFA authentication.
-- No service-role key is used in browser code.
+From the homepage, the Credentials section links to the dedicated `credentials.html` archive.
 
-## Important
-The current CMS is intentionally a simple first production foundation. Before uploading highly sensitive/private documents, keep them in the private bucket and add a dedicated download flow using short-lived signed URLs. Public portfolio files should be treated as public once published.
+The archive categories are:
+- Certifications
+- Memberships
+- Presentations
+- Awards
+- Training
+
+Each published item becomes a flashcard. Clicking it opens the attached public image or PDF in a full-screen viewer.
+
+The Admin panel now provides Membership, Presentation and Training as content types. The browser maps these to the existing database types automatically, so the existing schema remains compatible.
+
+### Important browser configuration
+
+`supabase-config.js` must be present in the GitHub repository. It is intentionally not ignored by `.gitignore` in this package. Put only the Supabase Project URL and publishable/anon key in that file. Never put a service-role/secret key there.

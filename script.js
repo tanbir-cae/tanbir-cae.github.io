@@ -1,15 +1,103 @@
-const menu=document.getElementById("menu"),nav=document.getElementById("nav");
-if(menu&&nav){menu.addEventListener("click",()=>nav.classList.toggle("open"));document.querySelectorAll("#nav a").forEach(a=>a.addEventListener("click",()=>nav.classList.remove("open")));}
-const filterButtons=document.querySelectorAll(".filters button"),cardsContainer=document.querySelector(".cards"),researchGrid=document.querySelector(".research-grid"),credentialGrid=document.querySelector(".credential-grid"),mediaGrid=document.querySelector(".media-grid");
-function esc(v){return String(v??"").replace(/[&<>\'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\'":"&#39;","\"":"&quot;"}[c]));}
-function fileUrl(f){return window.supabaseClient.storage.from(f.bucket).getPublicUrl(f.storage_path).data.publicUrl;}
-function firstImage(item){return (item.files||[]).find(f=>/^image\//.test(f.mime||"")||/\.(png|jpe?g|webp|gif|svg)$/i.test(f.original_name||""));}
-function fileLinks(item){return (item.files||[]).slice(0,5).map(f=>`<a href="${esc(fileUrl(f))}" target="_blank" rel="noopener">${esc(f.original_name)} ↗</a>`).join("");}
-function renderProjects(items){if(!cardsContainer)return;const projects=items.filter(x=>x.type==="project");cardsContainer.innerHTML=projects.length?projects.map((p,i)=>{const image=firstImage(p),tags=(p.technologies||[]).slice(0,3).join(" · ");const thumb=image?`<div class="thumb dynamic-thumb" style="background-image:url('${esc(fileUrl(image))}')"><span>${esc((p.category||"PROJECT").toUpperCase())}</span><b>${esc(p.title)}</b></div>`:`<div class="thumb dynamic-thumb no-image"><span>${esc((p.category||"PROJECT").toUpperCase())}</span><b>${esc(p.title)}</b><i>${String(i+1).padStart(2,"0")}</i></div>`;return `<article class="card project" data-type="${esc(p.category||"other")}">${thumb}<div class="card-body"><p class="tag">${esc(tags||p.category||"PROJECT")}</p><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p><div class="meta"><span>${esc(p.date||"Portfolio")}</span><span>${p.external_url?`<a href="${esc(p.external_url)}" target="_blank" rel="noopener">OPEN ↗</a>`:(p.files?.length?"FILES ↗":"VIEW →")}</span></div>${p.files?.length?`<div class="project-files">${fileLinks(p)}</div>`:""}</div></article>`}).join(""):'<p class="empty-state">No published projects yet.</p>';bindFilters();}
-function renderResearch(items){if(!researchGrid)return;const data=items.filter(x=>x.type==="research");if(!data.length)return;researchGrid.innerHTML=data.map((r,i)=>`<article><span>R-${String(i+1).padStart(2,"0")}</span><h3>${esc(r.title)}</h3><p>${esc(r.description)}</p><small>${esc((r.technologies||[]).join(" · "))}</small>${r.external_url?`<a class="research-link" href="${esc(r.external_url)}" target="_blank" rel="noopener">OPEN ↗</a>`:""}</article>`).join("");}
-function renderCredentials(items){if(!credentialGrid)return;const data=items.filter(x=>["certification","publication","award"].includes(x.type));const countEl=document.getElementById("credentialCount"),filters=document.getElementById("credentialFilters");if(countEl)countEl.textContent=`${data.length} ${data.length===1?"item":"items"}`;if(!data.length){credentialGrid.innerHTML='<p class="empty-state">No credentials published yet.</p>';return;}const labelFor=x=>x.category==='membership'?'MEMBERSHIP':x.category==='presentation'?'PRESENTATION':x.category==='competition'?'AWARD':x.category==='training'?'TRAINING':x.type==='publication'?'PUBLICATION':'CERTIFICATION';const card=x=>{const f=firstImage(x),label=labelFor(x),href=x.external_url||(f?fileUrl(f):"");return `<article class="credential" data-credential-type="${esc(x.category||x.type)}"><div class="credential-visual">${f?`<img src="${esc(fileUrl(f))}" alt="${esc(x.title)} certificate or badge" loading="lazy">`:`<div class="credential-placeholder">${esc(label)}</div>`}</div><div class="credential-info"><div class="credential-top"><span class="credential-label">${esc(label)}</span><span class="credential-date">${esc(x.date||"")}</span></div><h3>${esc(x.title)}</h3><p>${esc(x.issuer||x.description||"")}</p>${x.credential_id?`<small class="credential-id">ID · ${esc(x.credential_id)}</small>`:""}${href?`<a href="${esc(href)}" target="_blank" rel="noopener">VIEW CREDENTIAL ↗</a>`:""}</div></article>`};const render=filter=>{const selected=data.filter(x=>filter==="all"||x.category===filter);credentialGrid.innerHTML=selected.length?selected.map(card).join(""):'<p class="empty-state">Nothing in this category yet.</p>';if(countEl)countEl.textContent=`${selected.length} ${selected.length===1?"item":"items"}`};if(filters)filters.querySelectorAll("button").forEach(btn=>btn.onclick=()=>{filters.querySelectorAll("button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render(btn.dataset.credentialFilter)});render("all");}
-function renderMedia(items){if(!mediaGrid)return;const media=items.filter(x=>x.type==="media");if(!media.length)return;mediaGrid.innerHTML=media.map(x=>{const f=x.files?.[0];return `<div class="media-box dynamic-media">${f&&/^image\//.test(f.mime||"")?`<img src="${esc(fileUrl(f))}" alt="${esc(x.title)}">`:`<div class="media-placeholder">${esc(x.category||"MEDIA").toUpperCase()}</div>`}<div><b>${esc(x.title)}</b><p>${esc(x.description||"")}</p>${f?`<a href="${esc(fileUrl(f))}" target="_blank" rel="noopener">OPEN FILE ↗</a>`:""}</div></div>`}).join("");}
-function bindFilters(){const cards=document.querySelectorAll(".project");filterButtons.forEach(btn=>btn.onclick=()=>{filterButtons.forEach(b=>b.classList.remove("active"));btn.classList.add("active");const f=btn.dataset.filter;cards.forEach(card=>card.style.display=(f==="all"||card.dataset.type===f)?"block":"none")});}
-bindFilters();
-async function start(){const cfg=window.SUPABASE_CONFIG;if(!cfg||!cfg.url||cfg.url.includes("PASTE_YOUR")){return;}const {createClient}=window.supabase;window.supabaseClient=createClient(cfg.url,cfg.anonKey);const {data,error}=await window.supabaseClient.from("content").select("*, content_files(*)").eq("published",true).order("created_at",{ascending:false});if(error){console.error(error);return;}renderProjects(data||[]);renderResearch(data||[]);renderCredentials(data||[]);renderMedia(data||[]);}
+const menu = document.getElementById("menu");
+const nav = document.getElementById("nav");
+const researchGrid = document.querySelector(".research-grid");
+const mediaGrid = document.querySelector(".media-grid");
+
+if (menu && nav) {
+  menu.addEventListener("click", () => nav.classList.toggle("open"));
+  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => nav.classList.remove("open")));
+}
+
+function esc(v) {
+  return String(v ?? "").replace(/[&<>\"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function fileUrl(file) {
+  if (!file) return "";
+  const cfg = window.SUPABASE_CONFIG;
+  if (!cfg?.url || !file.storage_path) return "";
+  if (file.bucket === "portfolio-public") {
+    return `${cfg.url}/storage/v1/object/public/${file.bucket}/${file.storage_path}`;
+  }
+  return "";
+}
+
+function renderResearch(items) {
+  if (!researchGrid) return;
+  const research = items.filter(x => x.type === "research");
+  if (!research.length) {
+    researchGrid.innerHTML = `
+      <div class="research-empty-home">
+        <strong>No research published yet.</strong>
+        <p>Add your original research from the Admin page and publish it to display it here.</p>
+        <a class="research-link" href="research.html">OPEN RESEARCH ARCHIVE →</a>
+      </div>`;
+    return;
+  }
+  researchGrid.innerHTML = research.slice(0, 3).map(x => `
+    <article class="research-home-card">
+      <span>${esc((x.category || "RESEARCH").toUpperCase())}</span>
+      <h3>${esc(x.title)}</h3>
+      <p>${esc(x.description || "")}</p>
+      <small>${esc((x.technologies || []).join(" · ")).toUpperCase()}</small>
+      <a class="research-link" href="research.html">VIEW RESEARCH →</a>
+    </article>
+  `).join("");
+}
+
+function credentialKind(x) {
+  const c = String(x.category || "").toLowerCase();
+  if (c === "membership") return "membership";
+  if (["presentation", "conference", "poster"].includes(c)) return "presentation";
+  if (c === "training") return "training";
+  if (x.type === "award" || c === "competition") return "competition";
+  return "certification";
+}
+
+function updateCredentialCount(items) {
+  const countEl = document.getElementById("credentialCount");
+  if (!countEl) return;
+  const data = items.filter(x => ["certification", "award", "publication", "other"].includes(x.type));
+  countEl.textContent = `${data.length} ${data.length === 1 ? "item" : "items"}`;
+}
+
+function renderMedia(items) {
+  if (!mediaGrid) return;
+  const media = items.filter(x => x.type === "media");
+  if (!media.length) return;
+  mediaGrid.innerHTML = media.map(x => {
+    const f = x.files?.[0];
+    const url = fileUrl(f);
+    return `<div class="media-box dynamic-media">
+      ${f && /^image\//.test(f.mime || "") ? `<img src="${esc(url)}" alt="${esc(x.title)}" loading="lazy">` : `<div class="media-placeholder">${esc(x.category || "MEDIA").toUpperCase()}</div>`}
+      <div><b>${esc(x.title)}</b><p>${esc(x.description || "")}</p>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">OPEN FILE ↗</a>` : ""}</div>
+    </div>`;
+  }).join("");
+}
+
+async function start() {
+  const cfg = window.SUPABASE_CONFIG;
+  if (!cfg || !cfg.url || cfg.url.includes("PASTE_YOUR")) return;
+
+  const { createClient } = window.supabase;
+  window.supabaseClient = createClient(cfg.url, cfg.anonKey);
+
+  const { data, error } = await window.supabaseClient
+    .from("content")
+    .select("*, content_files(*)")
+    .eq("published", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Portfolio content load failed:", error);
+    return;
+  }
+
+  renderResearch(data || []);
+  updateCredentialCount(data || []);
+  renderMedia(data || []);
+}
+
 start();

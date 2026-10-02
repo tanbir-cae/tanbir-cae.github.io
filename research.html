@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Research — Tanbir Hasan</title>
+<meta name="description" content="Research papers and original research work by Md. Tanbir Hasan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+  <a class="brand" href="index.html"><span class="brand-mark">TH</span><span>ENGINEERING<br><b>LAB</b></span></a>
+  <nav id="nav">
+    <a href="index.html#work">Work</a>
+    <a href="research.html">Research</a>
+    <a href="index.html#media">Media</a>
+    <a href="index.html#credentials">Credentials</a>
+    <a href="index.html#about">About</a>
+  </nav>
+  <button class="menu" id="menu" aria-label="Open navigation">☰</button>
+</header>
+
+<main>
+  <section class="research-archive-hero">
+    <a class="back-link" href="index.html#research">← BACK TO RESEARCH</a>
+    <span class="archive-hero-kicker">02 / RESEARCH ARCHIVE</span>
+    <h1>Original research<br><em>&amp; publications.</em></h1>
+    <p>Research papers, conference papers and manuscripts uploaded through the private CMS. Only published records appear here.</p>
+  </section>
+
+  <section class="research-archive-section">
+    <div class="research-archive-head">
+      <span>MY RESEARCH</span>
+      <span id="researchCount">0 records</span>
+    </div>
+
+    <div id="researchArchiveGrid" class="research-archive-grid"></div>
+    <div id="researchMessage" class="research-archive-message"></div>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Md. Tanbir Hasan</span>
+  <span>ENGINEERING LAB / RESEARCH</span>
+</footer>
+
+<script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="research.js"></script>
+</body>
+</html>

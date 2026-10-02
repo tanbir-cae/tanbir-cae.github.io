@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAD — Tanbir Hasan</title>
+<meta name="description" content="Mechanical CAD designs, 3D models, assemblies and engineering geometry.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-category="cad">
+<header class="header">
+  <a class="brand" href="index.html"><span class="brand-mark">TH</span><span>ENGINEERING<br><b>LAB</b></span></a>
+  <nav id="nav"><a href="index.html#work">Work</a><a href="index.html#research">Research</a><a href="index.html#media">Media</a><a href="index.html#credentials">Credentials</a><a href="index.html#about">About</a></nav>
+  <button class="menu" id="menu" aria-label="Open navigation">☰</button>
+</header>
+<main>
+<section class="archive-hero">
+  <a class="back-link" href="index.html#work">← BACK TO ENGINEERING WORK</a>
+  <span class="archive-hero-kicker">01 / CAD · SOLIDWORKS</span>
+  <h1>CAD</h1>
+  <p>Mechanical CAD designs, 3D models, assemblies and engineering geometry.</p>
+</section>
+<section class="archive-list-section">
+  <div class="archive-list-head"><span>PROJECT ARCHIVE</span><span id="archiveMessage">Loading projects…</span></div>
+  <div id="archiveGrid" class="archive-project-grid"></div>
+</section>
+</main>
+<footer><span>© 2026 Md. Tanbir Hasan</span><span>ENGINEERING LAB / ARCHIVE</span></footer>
+<script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="archive.js"></script>
+<script>
+const menu=document.getElementById('menu'),nav=document.getElementById('nav');
+if(menu&&nav){menu.onclick=()=>nav.classList.toggle('open');nav.querySelectorAll('a').forEach(a=>a.onclick=()=>nav.classList.remove('open'));}
+</script>
+</body>
+</html>
