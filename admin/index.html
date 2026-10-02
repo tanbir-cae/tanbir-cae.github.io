@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tanbir Hasan — Admin</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<main class="shell">
+  <section id="loginView" class="panel login-panel">
+    <div class="eyebrow">PRIVATE / ADMIN</div>
+    <h1>Portfolio<br><span>Control.</span></h1>
+    <p>Sign in to manage projects, research, credentials, media and files.</p>
+    <form id="loginForm">
+      <label>Email<input id="email" type="email" autocomplete="username" required></label>
+      <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+      <button class="primary" type="submit">Sign in</button>
+      <p id="loginMessage" class="message"></p>
+    </form>
+  </section>
+
+  <section id="mfaView" class="panel login-panel hidden">
+    <div class="eyebrow">SECOND FACTOR</div>
+    <h1>Verify<br><span>identity.</span></h1>
+    <p>Enter the 6-digit code from your authenticator app.</p>
+    <form id="mfaForm">
+      <label>Authenticator code<input id="mfaCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required></label>
+      <button class="primary" type="submit">Verify & continue</button>
+      <p id="mfaMessage" class="message"></p>
+    </form>
+  </section>
+
+  <section id="appView" class="hidden">
+    <header class="topbar">
+      <div><div class="eyebrow">TANBIR HASAN / CMS</div><h2>Portfolio Admin</h2></div>
+      <button id="logout" class="ghost">Sign out</button>
+    </header>
+
+    <div id="stats" class="stats"></div>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="panel-head"><div><div class="eyebrow">CONTENT</div><h3>Add new item</h3></div></div>
+        <form id="contentForm" class="form">
+          <label>Type<select id="type"><option value="project">Project</option><option value="research">Research</option><option value="publication">Publication</option><option value="certification">Certification</option><option value="award">Award</option><option value="media">Media</option><option value="other">Other</option></select></label>
+          <label>Title<input id="title" required></label>
+          <label>Category<select id="category"></select></label>
+          <label>Description<textarea id="description" rows="5"></textarea></label>
+          <label>Technologies / tags<input id="technologies" placeholder="Python, ANSYS Fluent, SolidWorks"></label>
+          <div class="two">
+            <label>Date<input id="date" type="date"></label>
+            <label>External link<input id="externalUrl" type="url" placeholder="https://..."></label>
+          </div>
+          <label id="issuerWrap">Issuer / organization<input id="issuer"></label>
+          <label id="credentialWrap">Credential ID<input id="credentialId"></label>
+          <label id="statusWrap">Status<input id="status" placeholder="Published, submitted, in progress..."></label>
+          <label>Files<input id="files" type="file" multiple></label>
+          <p class="hint">Files intended for the public portfolio go to the public bucket. Do not upload passwords, API keys, private documents or secrets.</p>
+          <div class="checks"><label class="check"><input id="featured" type="checkbox"> Featured</label><label class="check"><input id="published" type="checkbox" checked> Published</label></div>
+          <button class="primary" type="submit">Save to portfolio</button>
+          <p id="formMessage" class="message"></p>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><div><div class="eyebrow">LIBRARY</div><h3>Your content</h3></div><input id="search" class="search" placeholder="Search..."></div>
+        <div id="contentList" class="list"></div>
+      </section>
+    </div>
+  </section>
+</main>
+<script src="../supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin.js" type="module"></script>
+</body>
+</html>
