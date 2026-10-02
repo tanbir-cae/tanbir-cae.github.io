@@ -59,7 +59,7 @@ function credentialKind(x) {
 function updateCredentialCount(items) {
   const countEl = document.getElementById("credentialCount");
   if (!countEl) return;
-  const data = items.filter(x => ["certification", "award", "publication", "other"].includes(x.type));
+  const data = items.filter(x => ["certification", "award", "publication", "membership", "presentation", "training", "other"].includes(x.type));
   countEl.textContent = `${data.length} ${data.length === 1 ? "item" : "items"}`;
 }
 

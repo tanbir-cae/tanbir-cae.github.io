@@ -217,7 +217,7 @@ async function load() {
     .from("content")
     .select("*, content_files(*)")
     .eq("published", true)
-    .in("type", ["certification", "award", "publication", "other"])
+    .in("type", ["certification", "award", "publication", "membership", "presentation", "training", "other"])
     .order("date", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false });
 
