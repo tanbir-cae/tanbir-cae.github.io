@@ -31,6 +31,20 @@
     </form>
   </section>
 
+  <section id="enrollView" class="panel login-panel hidden">
+    <div class="eyebrow">FIRST-TIME SECURITY SETUP</div>
+    <h1>Protect<br><span>your admin.</span></h1>
+    <p>Scan this QR code with Google Authenticator, Microsoft Authenticator, 1Password, or another TOTP authenticator.</p>
+    <div id="qrBox" class="qr-box" aria-label="Authenticator QR code"></div>
+    <div class="secret-label">Manual setup key</div>
+    <code id="enrollSecret" class="secret"></code>
+    <form id="enrollForm">
+      <label>Authenticator code<input id="enrollCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label>
+      <button class="primary" type="submit">Enable MFA & continue</button>
+      <p id="enrollMessage" class="message"></p>
+    </form>
+  </section>
+
   <section id="appView" class="hidden">
     <header class="topbar">
       <div><div class="eyebrow">TANBIR HASAN / CMS</div><h2>Portfolio Admin</h2></div>
@@ -43,20 +57,88 @@
       <section class="panel">
         <div class="panel-head"><div><div class="eyebrow">CONTENT</div><h3>Add new item</h3></div></div>
         <form id="contentForm" class="form">
-          <label>Type<select id="type"><option value="project">Project</option><option value="research">Research</option><option value="publication">Publication</option><option value="certification">Certification</option><option value="award">Award</option><option value="media">Media</option><option value="other">Other</option></select></label>
-          <label>Title<input id="title" required></label>
-          <label>Category<select id="category"></select></label>
-          <label>Description<textarea id="description" rows="5"></textarea></label>
-          <label>Technologies / tags<input id="technologies" placeholder="Python, ANSYS Fluent, SolidWorks"></label>
+          <label>Content type
+            <select id="type">
+              <option value="project">Engineering Project</option>
+              <option value="research">Research Paper</option>
+              <option value="publication">Publication</option>
+              <option value="certification">Certification</option>
+              <option value="membership">Membership</option>
+              <option value="presentation">Presentation</option>
+              <option value="training">Training</option>
+              <option value="award">Award / Achievement</option>
+              <option value="media">Media</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+
+          <label>Title<input id="title" required placeholder="e.g. Water Wave Impact on a Vertical Wall"></label>
+          <label id="projectAreaWrap">Portfolio archive
+            <select id="category"></select>
+          </label>
+          <label id="projectKindWrap">Project / asset type
+            <select id="projectKind">
+              <option value="part-modeling">Part Modeling</option>
+              <option value="assembly">Assembly</option>
+              <option value="2d-drawing">2D Drawing / 2D Design</option>
+              <option value="3d-cad">3D CAD Model</option>
+              <option value="cfd-simulation">CFD Simulation</option>
+              <option value="fea-analysis">FEA Analysis</option>
+              <option value="robotics">Robotics</option>
+              <option value="automation">Automation</option>
+              <option value="manufacturing">Manufacturing</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+
+          <label>Description / short summary<textarea id="description" rows="4" placeholder="Short text shown on the archive card."></textarea></label>
+
+          <div id="projectDetails" class="detail-grid">
+            <label>Project overview<textarea id="projectOverview" rows="4" placeholder="What did you build or investigate?"></textarea></label>
+            <label>Objectives<textarea id="objectives" rows="4" placeholder="Main engineering objectives."></textarea></label>
+            <label>Methodology / workflow<textarea id="methodology" rows="5" placeholder="Design, simulation, experimental or computational workflow."></textarea></label>
+            <label>Results / findings<textarea id="results" rows="5" placeholder="Important results, observations or conclusions."></textarea></label>
+          </div>
+
+          <label>Technologies / tools / tags<input id="technologies" placeholder="SolidWorks, ANSYS Fluent, Arduino, Python"></label>
           <div class="two">
             <label>Date<input id="date" type="date"></label>
             <label>External link<input id="externalUrl" type="url" placeholder="https://..."></label>
           </div>
           <label id="issuerWrap">Issuer / organization<input id="issuer"></label>
           <label id="credentialWrap">Credential ID<input id="credentialId"></label>
-          <label id="statusWrap">Status<input id="status" placeholder="Published, submitted, in progress..."></label>
-          <label>Files<input id="files" type="file" multiple></label>
-          <p class="hint">Files intended for the public portfolio go to the public bucket. Do not upload passwords, API keys, private documents or secrets.</p>
+          <label id="statusWrap">Status<input id="status" placeholder="Published, accepted, submitted, in progress..."></label>
+
+          <div id="projectFiles" class="upload-groups">
+            <div class="upload-group"><label>01 · Cover / thumbnail<input id="thumbnailFile" type="file" accept="image/*"></label><small>Main image shown on the archive flashcard.</small></div>
+            <div class="upload-group"><label>02 · 2D drawings & designs<input id="drawingFiles" type="file" multiple accept="image/*,.pdf,.dwg,.dxf,.slddrw,.step,.stp,.iges,.igs"></label><small>Engineering drawings, 2D layouts, dimensioned drawings, DWG/DXF/SLDDRW or drawing PDFs.</small></div>
+            <div class="upload-group"><label>03 · 3D CAD models<input id="modelFiles" type="file" multiple accept=".glb,.gltf,model/gltf-binary,model/gltf+json"></label><small>GLB/GLTF models used by the web 3D viewer. Upload multiple variants if needed.</small></div>
+            <div class="upload-group"><label>04 · CAD source files<input id="cadSourceFiles" type="file" multiple accept=".sldprt,.sldasm,.slddrw,.step,.stp,.iges,.igs,.stl,.obj,.dwg,.dxf,.zip,.rar"></label><small>Original SolidWorks parts, assemblies, drawings and exchange CAD files for download.</small></div>
+            <div class="upload-group"><label>05 · Project photos & screenshots<input id="projectImageFiles" type="file" multiple accept="image/*"></label><small>Product photos, CAD screenshots, prototype photos and general documentation.</small></div>
+            <div class="upload-group"><label>06 · CFD / FEA result images<input id="resultImageFiles" type="file" multiple accept="image/*,.pdf"></label><small>Contours, meshes, stress plots, pressure/velocity/temperature results and graphs.</small></div>
+            <div class="upload-group"><label>07 · Simulation videos & animations<input id="simulationVideoFiles" type="file" multiple accept="video/*,.mp4,.webm,.mov,.avi"></label><small>CFD animations, transient results, FEA animations, motion studies and experiment videos.</small></div>
+            <div class="upload-group"><label>08 · Reports & presentations<input id="reportFiles" type="file" multiple accept=".pdf,.ppt,.pptx,.doc,.docx,.txt"></label><small>Technical reports, presentations, documentation and project reports.</small></div>
+            <div class="upload-group"><label>09 · Code, notebooks & datasets<input id="codeDataFiles" type="file" multiple accept=".py,.ipynb,.cpp,.c,.h,.ino,.js,.json,.csv,.xlsx,.xls,.mat,.zip"></label><small>Python/C++/Arduino code, Jupyter notebooks, datasets and analysis files.</small></div>
+            <div class="upload-group"><label>10 · Other project files<input id="projectOtherFiles" type="file" multiple"></label><small>Any additional file you want visitors to download.</small></div>
+          </div>
+
+          <div id="researchFiles" class="upload-groups">
+            <div class="upload-group"><label>Research cover / thumbnail<input id="researchThumbnailFile" type="file" accept="image/*"></label><small>Image shown on the research flashcard.</small></div>
+            <div class="upload-group"><label>Research paper / manuscript<input id="researchPaperFile" type="file" accept=".pdf,application/pdf"></label><small>The full paper PDF.</small></div>
+            <div class="upload-group"><label>Figures & research images<input id="researchFigureFiles" type="file" multiple accept="image/*"></label><small>Graphical abstracts, figures and research visuals.</small></div>
+            <div class="upload-group"><label>Research supplementary files<input id="researchAttachmentFiles" type="file" multiple></label><small>Datasets, notebooks, posters, presentations or supplementary documents.</small></div>
+          </div>
+
+          <div id="credentialFiles" class="upload-groups">
+            <div class="upload-group"><label>Certificate / credential preview<input id="credentialPreviewFile" type="file" accept="image/*,.pdf"></label><small>The file shown when visitors open the credential.</small></div>
+            <div class="upload-group"><label>Additional credential files<input id="credentialAttachmentFiles" type="file" multiple></label><small>Supporting documents, transcripts, event programs or verification files.</small></div>
+          </div>
+
+          <div id="generalFiles" class="upload-groups">
+            <div class="upload-group"><label>Files<input id="files" type="file" multiple></label><small>General public files for this content item.</small></div>
+          </div>
+
+          <p class="hint">Files uploaded here are intended for your public portfolio. Never upload passwords, API keys, private documents, personal secrets or confidential third-party material.</p>
           <div class="checks"><label class="check"><input id="featured" type="checkbox"> Featured</label><label class="check"><input id="published" type="checkbox" checked> Published</label></div>
           <button class="primary" type="submit">Save to portfolio</button>
           <p id="formMessage" class="message"></p>
