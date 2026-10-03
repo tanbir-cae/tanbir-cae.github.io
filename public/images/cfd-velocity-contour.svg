@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="velGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="30%" stop-color="#f59e0b"/>
+      <stop offset="60%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="#0b1120"/>
+  <rect x="60" y="80" width="620" height="300" fill="url(#velGrad)" rx="4" opacity="0.85"/>
+
+  <g stroke="#ffffff" stroke-width="2" opacity="0.75">
+    <line x1="120" y1="320" x2="180" y2="320"/><polyline points="175,315 185,320 175,325"/>
+    <line x1="240" y1="310" x2="300" y2="300"/><polyline points="295,295 305,300 295,305"/>
+    <line x1="360" y1="280" x2="420" y2="250"/><polyline points="415,245 425,250 415,255"/>
+    <line x1="480" y1="220" x2="530" y2="170"/><polyline points="525,165 535,170 525,175"/>
+    <line x1="580" y1="150" x2="600" y2="90"/><polyline points="595,85 600,90 605,95"/>
+  </g>
+
+  <rect x="700" y="90" width="24" height="270" fill="url(#velGrad)" stroke="#64748b" stroke-width="1"/>
+  <text x="730" y="100" fill="#ef4444" font-family="monospace" font-size="11">4.82 m/s (Jet)</text>
+  <text x="730" y="180" fill="#f59e0b" font-family="monospace" font-size="11">3.20 m/s</text>
+  <text x="730" y="270" fill="#10b981" font-family="monospace" font-size="11">1.60 m/s</text>
+  <text x="730" y="360" fill="#3b82f6" font-family="monospace" font-size="11">0.00 m/s</text>
+
+  <text x="60" y="50" fill="#38bdf8" font-family="monospace" font-size="14" font-weight="bold">CFD VELOCITY MAGNITUDE CONTOUR &amp; VECTORS [m/s]</text>
+</svg>

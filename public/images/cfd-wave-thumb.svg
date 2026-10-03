@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="cfdGrad" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="40%" stop-color="#06b6d4"/>
+      <stop offset="70%" stop-color="#10b981"/>
+      <stop offset="90%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#skyGrad)"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+  
+  <rect x="640" y="80" width="30" height="320" fill="#475569" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="50" y1="400" x2="750" y2="400" stroke="#64748b" stroke-width="3"/>
+  
+  <path d="M 50 400 L 50 320 Q 200 320 320 280 T 520 180 C 580 120 620 160 640 140 L 640 400 Z" fill="url(#cfdGrad)" opacity="0.85"/>
+  
+  <circle cx="635" cy="130" r="5" fill="#e0f2fe" opacity="0.9"/>
+  <circle cx="625" cy="115" r="4" fill="#bae6fd" opacity="0.8"/>
+  <circle cx="615" cy="105" r="3" fill="#7dd3fc" opacity="0.7"/>
+  <circle cx="600" cy="95" r="4" fill="#38bdf8" opacity="0.6"/>
+  
+  <text x="40" y="50" fill="#38bdf8" font-family="monospace" font-size="14" font-weight="bold">CFD // MULTIPHASE VOF TRANSIENT SOLVER</text>
+  <text x="40" y="75" fill="#94a3b8" font-family="monospace" font-size="12">ANSYS Fluent 2024 · k-ω SST Turbulence · y+ ≈ 1.2 · Δt = 0.001s</text>
+  
+  <line x1="640" y1="415" x2="670" y2="415" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="642" y="430" fill="#94a3b8" font-family="monospace" font-size="10">W = 1.2m</text>
+</svg>

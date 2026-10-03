@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="feaGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="30%" stop-color="#0284c7"/>
+      <stop offset="60%" stop-color="#10b981"/>
+      <stop offset="85%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="#090d16"/>
+  <polygon points="220,100 580,100 660,180 660,340 300,340 220,260" fill="url(#feaGrad)" opacity="0.9" stroke="#94a3b8" stroke-width="2"/>
+
+  <ellipse cx="380" cy="200" rx="28" ry="36" fill="#0f172a" stroke="#f87171" stroke-width="3"/>
+  <ellipse cx="490" cy="200" rx="28" ry="36" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+  <ellipse cx="435" cy="280" rx="28" ry="36" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+
+  <circle cx="250" cy="120" r="10" fill="#090d16" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="550" cy="120" r="10" fill="#090d16" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="250" cy="240" r="10" fill="#090d16" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="630" cy="320" r="10" fill="#090d16" stroke="#cbd5e1" stroke-width="2"/>
+
+  <line x1="380" y1="164" x2="300" y2="90" stroke="#ef4444" stroke-width="2"/>
+  <circle cx="380" cy="164" r="5" fill="#ef4444"/>
+  <text x="180" y="80" fill="#ef4444" font-family="monospace" font-size="12" font-weight="bold">Max σ_vm: 242.8 MPa</text>
+
+  <text x="40" y="50" fill="#38bdf8" font-family="monospace" font-size="14" font-weight="bold">ANSYS MECHANICAL // 350 BAR MANIFOLD FEA</text>
+  <text x="40" y="75" fill="#94a3b8" font-family="monospace" font-size="12">Al 7075-T6 · 680k Nodes · SOLID187 · Factor of Safety = 2.07</text>
+</svg>

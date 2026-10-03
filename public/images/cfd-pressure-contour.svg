@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pressGrad" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="25%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#10b981"/>
+      <stop offset="75%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="#0b1120"/>
+  <rect x="60" y="80" width="620" height="300" fill="url(#pressGrad)" rx="4" opacity="0.85"/>
+  
+  <path d="M 80 340 C 240 340 450 320 620 200" stroke="white" stroke-width="2" fill="none" stroke-dasharray="6,4" opacity="0.6"/>
+  <path d="M 80 280 C 240 280 430 260 620 160" stroke="white" stroke-width="2" fill="none" stroke-dasharray="6,4" opacity="0.6"/>
+  <path d="M 80 220 C 220 220 380 200 620 120" stroke="white" stroke-width="2" fill="none" stroke-dasharray="6,4" opacity="0.6"/>
+  <path d="M 80 160 C 200 160 320 150 620 95" stroke="white" stroke-width="2" fill="none" stroke-dasharray="6,4" opacity="0.6"/>
+
+  <rect x="700" y="90" width="24" height="270" fill="url(#pressGrad)" stroke="#64748b" stroke-width="1"/>
+  <text x="730" y="100" fill="#f87171" font-family="monospace" font-size="11">48.6 kPa (Max)</text>
+  <text x="730" y="160" fill="#fbbf24" font-family="monospace" font-size="11">36.5 kPa</text>
+  <text x="730" y="225" fill="#34d399" font-family="monospace" font-size="11">24.3 kPa</text>
+  <text x="730" y="290" fill="#38bdf8" font-family="monospace" font-size="11">12.2 kPa</text>
+  <text x="730" y="360" fill="#60a5fa" font-family="monospace" font-size="11">0.0 kPa</text>
+
+  <text x="60" y="50" fill="#38bdf8" font-family="monospace" font-size="14" font-weight="bold">CFD IMPACT DYNAMIC PRESSURE CONTOUR [kPa]</text>
+</svg>

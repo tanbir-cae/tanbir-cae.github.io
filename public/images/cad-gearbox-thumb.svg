@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <rect width="800" height="450" fill="#090d16"/>
+  <circle cx="400" cy="225" r="180" fill="none" stroke="#3b82f6" stroke-width="3" stroke-dasharray="10,6"/>
+  <circle cx="400" cy="225" r="165" fill="none" stroke="#1d4ed8" stroke-width="8"/>
+  
+  <circle cx="400" cy="225" r="45" fill="#1e293b" stroke="#38bdf8" stroke-width="4"/>
+  <circle cx="400" cy="225" r="16" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+  <rect x="396" y="205" width="8" height="10" fill="#38bdf8"/>
+
+  <circle cx="400" cy="125" r="42" fill="#1e293b" stroke="#06b6d4" stroke-width="3"/>
+  <circle cx="400" cy="125" r="10" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+
+  <circle cx="313" cy="275" r="42" fill="#1e293b" stroke="#06b6d4" stroke-width="3"/>
+  <circle cx="313" cy="275" r="10" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+
+  <circle cx="487" cy="275" r="42" fill="#1e293b" stroke="#06b6d4" stroke-width="3"/>
+  <circle cx="487" cy="275" r="10" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+
+  <polygon points="400,125 313,275 487,275" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <text x="40" y="50" fill="#38bdf8" font-family="monospace" font-size="14" font-weight="bold">SOLIDWORKS 3D CAD // EPICYCLIC PLANETARY GEARSET</text>
+  <text x="40" y="75" fill="#94a3b8" font-family="monospace" font-size="12">Ratio 4:1 · Module 2.0mm · AISI 4340 Steel · GD&amp;T Class 7 Precision</text>
+</svg>
