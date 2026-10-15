@@ -542,7 +542,7 @@
       "issuer": "Dassault Systèmes",
       "date": "10 Sep 2026",
       "credentialId": "C-JKAMGVWPQH",
-      "image": "assets/images/1792068732397_q7p6wm_CSWP_Certificate_C-JKAMGVWPQH.pdf",
+      "image": "assets/images/1792069371684_4r9tgl_Screenshot_2026-10-15_190229.png",
       "verifyUrl": "https://cv.virtualtester.com/qr/?b=SLDWRKS&i=C-JKAMGVWPQH",
       "tags": [
         "SOLIDWORKS",
@@ -612,6 +612,6 @@
     "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
     "ogImage": "assets/images/og-image.jpg",
     "version": "1.0.0",
-    "lastUpdated": "2026-10-15T13:01:38.266Z"
+    "lastUpdated": "2026-10-15T13:03:00.590Z"
   }
 }
