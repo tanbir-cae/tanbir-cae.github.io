@@ -1,0 +1,416 @@
+{
+  "profile": {
+    "name": "Tanbir Hasan",
+    "role": "Mechanical Design & Simulation Engineer",
+    "tagline": "Designing with precision. Simulating with confidence.",
+    "bio": "I am a Mechanical Design and Simulation Engineer specializing in 3D CAD modeling with SOLIDWORKS and computational analysis (CFD & FEA) with ANSYS. I combine rigorous engineering fundamentals with advanced simulation to design, validate, and optimize mechanical systems.",
+    "location": "Dhaka, Bangladesh",
+    "email": "tanbirhasan.mail@gmail.com",
+    "heroSubtitle": "A portfolio of precision-engineered 3D designs and validated simulations across CAD, CFD, and FEA.",
+    "aboutSections": [
+      {
+        "heading": "What I Do",
+        "text": "I design mechanical components and assemblies in SOLIDWORKS, then validate them through finite element analysis and computational fluid dynamics in ANSYS. My workflow bridges concept sketches to production-ready models backed by simulation data."
+      },
+      {
+        "heading": "My Approach",
+        "text": "Every design starts with understanding the physics. I believe simulation should inform design decisions early — not just verify them at the end. This iterative approach reduces prototyping cycles and produces more robust, optimized solutions."
+      }
+    ]
+  },
+  "links": {
+    "linkedin": "https://www.linkedin.com/in/tanbir-hasan",
+    "grabcad": "https://grabcad.com/tanbir.hasan-1",
+    "github": "",
+    "resume": ""
+  },
+  "skills": [
+    {
+      "id": "sk-001",
+      "category": "CAD & Modeling",
+      "items": [
+        { "name": "SOLIDWORKS", "level": 95 },
+        { "name": "Part & Assembly Modeling", "level": 90 },
+        { "name": "Sheet Metal Design", "level": 80 },
+        { "name": "Weldments", "level": 75 },
+        { "name": "Engineering Drawings (GD&T)", "level": 85 },
+        { "name": "Surface Modeling", "level": 70 }
+      ]
+    },
+    {
+      "id": "sk-002",
+      "category": "Simulation & Analysis",
+      "items": [
+        { "name": "ANSYS Fluent (CFD)", "level": 85 },
+        { "name": "ANSYS Mechanical (FEA)", "level": 80 },
+        { "name": "SOLIDWORKS Simulation", "level": 75 },
+        { "name": "SOLIDWORKS Flow Simulation", "level": 70 },
+        { "name": "Meshing & Convergence Studies", "level": 80 },
+        { "name": "Thermal Analysis", "level": 75 }
+      ]
+    },
+    {
+      "id": "sk-003",
+      "category": "Engineering Fundamentals",
+      "items": [
+        { "name": "Solid Mechanics", "level": 85 },
+        { "name": "Fluid Mechanics", "level": 80 },
+        { "name": "Heat Transfer", "level": 75 },
+        { "name": "Machine Design", "level": 80 },
+        { "name": "Manufacturing Processes", "level": 75 },
+        { "name": "Material Science", "level": 70 }
+      ]
+    },
+    {
+      "id": "sk-004",
+      "category": "Tools & Other",
+      "items": [
+        { "name": "MATLAB", "level": 70 },
+        { "name": "Python", "level": 60 },
+        { "name": "Microsoft Office", "level": 85 },
+        { "name": "Technical Report Writing", "level": 80 },
+        { "name": "3D Printing & Prototyping", "level": 65 }
+      ]
+    }
+  ],
+  "designs": [
+    {
+      "id": "des-001",
+      "title": "Spur Gear Reduction Box",
+      "slug": "spur-gear-reduction-box",
+      "summary": "A two-stage spur gear reduction assembly with housing, designed for a 5:1 speed reduction ratio. Includes all internal components: shafts, bearings, keys, and seals.",
+      "software": "SOLIDWORKS",
+      "year": 2025,
+      "tags": ["Assembly", "Gears", "Machine Design"],
+      "featured": true,
+      "thumbnail": "assets/images/placeholder-gear-thumb.jpg",
+      "sections": [
+        {
+          "heading": "Design Overview",
+          "text": "This gear reduction box was designed to transmit 2.5 kW at 1440 RPM input speed, reducing it to 288 RPM output. The housing is a split-type design for ease of assembly and maintenance. All gear calculations follow AGMA standards."
+        },
+        {
+          "heading": "Key Design Features",
+          "text": "The assembly includes helical-cut spur gears with involute profiles, deep-groove ball bearings at each shaft support, lip seals to prevent lubricant leakage, and an inspection cover. The housing is designed with adequate wall thickness for casting."
+        }
+      ],
+      "keyNumbers": [
+        { "label": "Reduction Ratio", "value": "5:1" },
+        { "label": "Input Power", "value": "2.5 kW" },
+        { "label": "Input Speed", "value": "1440 RPM" },
+        { "label": "Number of Parts", "value": "34" }
+      ],
+      "images": [],
+      "videos": [],
+      "models": [],
+      "reports": []
+    },
+    {
+      "id": "des-002",
+      "title": "Hydraulic Bottle Jack",
+      "slug": "hydraulic-bottle-jack",
+      "summary": "Complete 3D model of a 20-ton hydraulic bottle jack with exploded view and engineering drawings. Modeled with accurate thread profiles and seal grooves.",
+      "software": "SOLIDWORKS",
+      "year": 2025,
+      "tags": ["Part Modeling", "Hydraulics", "Engineering Drawings"],
+      "featured": true,
+      "thumbnail": "assets/images/placeholder-jack-thumb.jpg",
+      "sections": [
+        {
+          "heading": "Project Description",
+          "text": "A fully detailed 3D model of a 20-ton capacity hydraulic bottle jack. Every component — from the pump piston to the release valve — is modeled to manufacturer specifications with proper tolerances and surface finish callouts."
+        }
+      ],
+      "keyNumbers": [
+        { "label": "Capacity", "value": "20 ton" },
+        { "label": "Stroke", "value": "150 mm" },
+        { "label": "Min. Height", "value": "215 mm" },
+        { "label": "Components", "value": "18" }
+      ],
+      "images": [],
+      "videos": [],
+      "models": [],
+      "reports": []
+    },
+    {
+      "id": "des-003",
+      "title": "Centrifugal Pump Impeller",
+      "slug": "centrifugal-pump-impeller",
+      "summary": "Backward-curved centrifugal pump impeller with 6 blades, designed using Euler's turbomachinery equations. Includes draft analysis for casting feasibility.",
+      "software": "SOLIDWORKS",
+      "year": 2024,
+      "tags": ["Surface Modeling", "Turbomachinery", "Fluid Systems"],
+      "featured": false,
+      "thumbnail": "assets/images/placeholder-impeller-thumb.jpg",
+      "sections": [
+        {
+          "heading": "Design Methodology",
+          "text": "The impeller was designed following Euler's pump equations to achieve the target head and flow rate. Blade angles were optimized to minimize flow separation and cavitation risk. Surface modeling techniques in SOLIDWORKS were used to create the complex blade geometry."
+        }
+      ],
+      "keyNumbers": [
+        { "label": "Blades", "value": "6" },
+        { "label": "Outer Diameter", "value": "220 mm" },
+        { "label": "Design Head", "value": "25 m" },
+        { "label": "Blade Angle (outlet)", "value": "32°" }
+      ],
+      "images": [],
+      "videos": [],
+      "models": [],
+      "reports": []
+    },
+    {
+      "id": "des-004",
+      "title": "Pipe Flange Assembly (ASME B16.5)",
+      "slug": "pipe-flange-assembly",
+      "summary": "Weld neck flange assembly for a 4-inch Class 150 piping system, modeled per ASME B16.5 dimensional standards with bolt pattern and gasket.",
+      "software": "SOLIDWORKS",
+      "year": 2024,
+      "tags": ["Assembly", "Piping", "Standards"],
+      "featured": false,
+      "thumbnail": "assets/images/placeholder-flange-thumb.jpg",
+      "sections": [
+        {
+          "heading": "Overview",
+          "text": "This flange assembly follows ASME B16.5 dimensions for a 4-inch nominal pipe size, Class 150 rating. It includes weld neck flanges, a spiral wound gasket, and A193 B7 stud bolts with heavy hex nuts. Engineering drawings with full GD&T callouts are included."
+        }
+      ],
+      "keyNumbers": [
+        { "label": "Pipe Size", "value": "4 inch" },
+        { "label": "Pressure Class", "value": "150" },
+        { "label": "Bolt Circle Dia.", "value": "241.3 mm" },
+        { "label": "Number of Bolts", "value": "8" }
+      ],
+      "images": [],
+      "videos": [],
+      "models": [],
+      "reports": []
+    }
+  ],
+  "simulations": [
+    {
+      "id": "sim-001",
+      "title": "Pressure Vessel Stress Analysis",
+      "slug": "pressure-vessel-stress-analysis",
+      "summary": "Static structural FEA of a cylindrical pressure vessel under 10 bar internal pressure. Evaluates von Mises stress distribution, deformation, and factor of safety against ASME criteria.",
+      "software": "ANSYS",
+      "type": "FEA",
+      "year": 2025,
+      "tags": ["Static Structural", "Pressure Vessel", "Stress Analysis"],
+      "featured": true,
+      "thumbnail": "assets/images/placeholder-vessel-thumb.jpg",
+      "sections": [
+        {
+          "heading": "Problem Statement",
+          "text": "A cylindrical pressure vessel with hemispherical end caps is subjected to 10 bar internal gauge pressure. The objective is to verify that the von Mises stress remains below the allowable stress for SA-516 Grade 70 carbon steel, per ASME Section VIII Division 2."
+        },
+        {
+          "heading": "Mesh & Boundary Conditions",
+          "text": "A hex-dominant mesh with 3 elements through the wall thickness was used. Mesh convergence study confirmed less than 2% change in peak stress with further refinement. Fixed support at the saddle locations, internal pressure applied on all inner surfaces."
+        },
+        {
+          "heading": "Results & Discussion",
+          "text": "Peak von Mises stress of 142 MPa occurred at the head-to-shell junction, well below the 186 MPa allowable. Maximum total deformation was 0.23 mm at the vessel crown. The minimum factor of safety is 1.31. Results agree within 5% of ASME hand calculations."
+        }
+      ],
+      "keyNumbers": [
+        { "label": "Max Stress", "value": "142 MPa" },
+        { "label": "Max Deformation", "value": "0.23 mm" },
+        { "label": "Factor of Safety", "value": "1.31" },
+        { "label": "Mesh Elements", "value": "184,500" }
+      ],
+      "images": [],
+      "videos": [],
+      "models": [],
+      "reports": []
+    },
+    {
+      "id": "sim-002",
+      "title": "External Aerodynamics of a Sedan Body",
+      "slug": "sedan-aerodynamics-cfd",
+      "summary": "Steady-state CFD simulation of airflow around a simplified sedan geometry at 100 km/h. Evaluates drag coefficient, pressure distribution, and wake structure.",
+      "software": "ANSYS",
+      "type": "CFD",
+      "year": 2025,
+      "tags": ["External Aerodynamics", "Drag", "Turbulence"],
+      "featured": true,
+      "thumbnail": "assets/images/placeholder-sedan-thumb.jpg",
+      "sections": [
+        {
+          "heading": "Simulation Setup",
+          "text": "A simplified sedan body (Ahmed body variant) was placed in a virtual wind tunnel with dimensions 5L × 3W × 3H. Inlet velocity of 27.78 m/s (100 km/h), k-omega SST turbulence model, and standard air properties at 25°C. Steady-state RANS simulation using ANSYS Fluent."
+        },
+        {
+          "heading": "Results",
+          "text": "Drag coefficient (Cd) was computed as 0.327, consistent with published data for similar geometries. Pressure recovery over the rear window shows the critical separation region. Streamline visualization reveals the recirculation zone behind the vehicle and vortex structures from the C-pillars."
+        }
+      ],
+      "keyNumbers": [
+        { "label": "Drag Coefficient (Cd)", "value": "0.327" },
+        { "label": "Frontal Area", "value": "2.16 m²" },
+        { "label": "Inlet Velocity", "value": "27.78 m/s" },
+        { "label": "Mesh Cells", "value": "3.2M" }
+      ],
+      "images": [],
+      "videos": [],
+      "models": [],
+      "reports": []
+    },
+    {
+      "id": "sim-003",
+      "title": "Cantilever Beam Modal Analysis",
+      "slug": "cantilever-beam-modal",
+      "summary": "Modal analysis of a steel cantilever beam to extract the first 6 natural frequencies and mode shapes. Results validated against analytical solutions.",
+      "software": "ANSYS",
+      "type": "FEA",
+      "year": 2024,
+      "tags": ["Modal Analysis", "Vibration", "Structural Dynamics"],
+      "featured": false,
+      "thumbnail": "assets/images/placeholder-beam-thumb.jpg",
+      "sections": [
+        {
+          "heading": "Objective",
+          "text": "Determine the natural frequencies and mode shapes of a fixed-free steel beam (500 × 50 × 10 mm) to verify against Euler-Bernoulli beam theory and ensure operating frequencies are safely away from resonance."
+        }
+      ],
+      "keyNumbers": [
+        { "label": "1st Natural Freq.", "value": "16.8 Hz" },
+        { "label": "2nd Natural Freq.", "value": "105.2 Hz" },
+        { "label": "3rd Natural Freq.", "value": "294.5 Hz" },
+        { "label": "Error vs. Theory", "value": "<1.5%" }
+      ],
+      "images": [],
+      "videos": [],
+      "models": [],
+      "reports": []
+    },
+    {
+      "id": "sim-004",
+      "title": "Pipe Flow Heat Transfer",
+      "slug": "pipe-flow-heat-transfer",
+      "summary": "Conjugate heat transfer CFD simulation of turbulent water flow through a heated copper pipe. Compares Nusselt number with Dittus-Boelter correlation.",
+      "software": "ANSYS",
+      "type": "CFD",
+      "year": 2024,
+      "tags": ["Heat Transfer", "Conjugate", "Pipe Flow"],
+      "featured": false,
+      "thumbnail": "assets/images/placeholder-pipeflow-thumb.jpg",
+      "sections": [
+        {
+          "heading": "Setup",
+          "text": "Turbulent water flow (Re = 15,000) through a 1-meter copper pipe with constant wall heat flux of 10,000 W/m². k-epsilon RNG turbulence model. Enhanced wall treatment with y+ < 1 near walls."
+        }
+      ],
+      "keyNumbers": [
+        { "label": "Reynolds Number", "value": "15,000" },
+        { "label": "Nusselt Number", "value": "92.4" },
+        { "label": "Outlet Temp Rise", "value": "8.3 °C" },
+        { "label": "Error vs. Correlation", "value": "3.2%" }
+      ],
+      "images": [],
+      "videos": [],
+      "models": [],
+      "reports": []
+    }
+  ],
+  "badges": [
+    {
+      "id": "badge-001",
+      "name": "CSWA",
+      "fullName": "Certified SOLIDWORKS Associate",
+      "issuer": "Dassault Systèmes",
+      "date": "2024",
+      "image": "assets/images/placeholder-cswa-badge.png",
+      "verifyUrl": ""
+    },
+    {
+      "id": "badge-002",
+      "name": "CSWP",
+      "fullName": "Certified SOLIDWORKS Professional",
+      "issuer": "Dassault Systèmes",
+      "date": "2025",
+      "image": "assets/images/placeholder-cswp-badge.png",
+      "verifyUrl": ""
+    },
+    {
+      "id": "badge-003",
+      "name": "[PLACEHOLDER]",
+      "fullName": "[Add your badge name here]",
+      "issuer": "[Issuing organization]",
+      "date": "[Year]",
+      "image": "assets/images/placeholder-badge.png",
+      "verifyUrl": ""
+    }
+  ],
+  "certificates": [
+    {
+      "id": "cert-001",
+      "title": "Certified SOLIDWORKS Associate (CSWA)",
+      "issuer": "Dassault Systèmes",
+      "date": "2024",
+      "credentialId": "[PLACEHOLDER - Add your credential ID]",
+      "image": "assets/images/placeholder-cswa-cert.jpg",
+      "verifyUrl": "",
+      "tags": ["SOLIDWORKS", "CAD"]
+    },
+    {
+      "id": "cert-002",
+      "title": "Certified SOLIDWORKS Professional (CSWP)",
+      "issuer": "Dassault Systèmes",
+      "date": "2025",
+      "credentialId": "[PLACEHOLDER - Add your credential ID]",
+      "image": "assets/images/placeholder-cswp-cert.jpg",
+      "verifyUrl": "",
+      "tags": ["SOLIDWORKS", "CAD"]
+    },
+    {
+      "id": "cert-003",
+      "title": "[PLACEHOLDER Certificate Title]",
+      "issuer": "[PLACEHOLDER Issuing Organization]",
+      "date": "[Year]",
+      "credentialId": "[PLACEHOLDER]",
+      "image": "assets/images/placeholder-cert.jpg",
+      "verifyUrl": "",
+      "tags": ["[PLACEHOLDER]"]
+    }
+  ],
+  "experience": [
+    {
+      "id": "exp-001",
+      "type": "experience",
+      "title": "[PLACEHOLDER - Job Title]",
+      "organization": "[PLACEHOLDER - Company/Organization Name]",
+      "location": "Dhaka, Bangladesh",
+      "startDate": "2024",
+      "endDate": "Present",
+      "description": "[PLACEHOLDER - Describe your role, responsibilities, and key achievements. What engineering problems did you solve? What tools did you use?]",
+      "highlights": [
+        "[PLACEHOLDER - Key achievement 1]",
+        "[PLACEHOLDER - Key achievement 2]"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-001",
+      "type": "education",
+      "title": "[PLACEHOLDER - Degree Name]",
+      "organization": "[PLACEHOLDER - University Name]",
+      "location": "Dhaka, Bangladesh",
+      "startDate": "[Start Year]",
+      "endDate": "[End Year or Expected]",
+      "description": "[PLACEHOLDER - Describe your program, relevant coursework, and academic projects.]",
+      "highlights": [
+        "[PLACEHOLDER - Notable course or project 1]",
+        "[PLACEHOLDER - Notable course or project 2]"
+      ]
+    }
+  ],
+  "meta": {
+    "siteTitle": "Tanbir Hasan — Mechanical Design & Simulation Engineer",
+    "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
+    "ogImage": "assets/images/og-image.jpg",
+    "version": "1.0.0",
+    "lastUpdated": ""
+  }
+}

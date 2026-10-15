@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Tanbir Hasan</title>
+  <meta name="description" content="Get in touch with Tanbir Hasan for mechanical design projects, simulation studies, or engineering consultation.">
+  <meta property="og:title" content="Contact — Tanbir Hasan">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="contact">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="contour-bar"></div>
+
+  <header class="header" role="banner">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo" aria-label="Home">
+        <div class="header__logo-mark">TH</div>
+        <div class="header__logo-text">MECHANICAL<br><strong>ENGINEER</strong></div>
+      </a>
+      <nav class="header__nav" aria-label="Main navigation"></nav>
+      <div class="header__cta"><a href="contact.html" class="btn btn--primary btn--sm">Get In Touch →</a></div>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="nav-toggle__open">☰</span><span class="nav-toggle__close">✕</span>
+      </button>
+    </div>
+  </header>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation"></nav>
+
+  <main id="main">
+    <section class="section">
+      <div class="container">
+        <p class="kicker">Let's Connect</p>
+        <h1 class="section-title">Contact Me</h1>
+        <p class="section-subtitle" style="margin-bottom:2.5rem;">Have a project in mind, need a simulation study, or want to discuss engineering work? I'd love to hear from you.</p>
+
+        <div class="contact-grid">
+          <!-- Contact info (filled by JS) -->
+          <div class="contact-info" id="contact-info">
+            <div class="spinner"></div>
+          </div>
+
+          <!-- Contact form (mailto-based) -->
+          <form class="contact-form" id="contact-form">
+            <div class="form-group">
+              <label for="contact-name">Your Name</label>
+              <input type="text" id="contact-name" name="name" required placeholder="Full name">
+            </div>
+            <div class="form-group">
+              <label for="contact-subject">Subject</label>
+              <input type="text" id="contact-subject" name="subject" placeholder="What is this about?">
+            </div>
+            <div class="form-group">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" name="message" required placeholder="Describe your project or question..."></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary" style="align-self:flex-start;">Send via Email →</button>
+            <p style="font-size:0.75rem;color:var(--muted);margin-top:0.5rem;">This opens your default email client with the message pre-filled.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner container">
+      <span>© 2025 Tanbir Hasan</span>
+      <div class="footer__links">
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+        <a href="admin.html" title="Admin" style="opacity:0.3;">•</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/pages.js"></script>
+</body>
+</html>

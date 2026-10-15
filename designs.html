@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Designs — Tanbir Hasan</title>
+  <meta name="description" content="Browse 3D mechanical designs by Tanbir Hasan, modeled in SOLIDWORKS. Part assemblies, sheet metal, surface modeling, and engineering drawings.">
+  <meta property="og:title" content="3D Designs — Tanbir Hasan">
+  <meta property="og:description" content="3D mechanical designs modeled in SOLIDWORKS by Tanbir Hasan.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="designs">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="contour-bar"></div>
+
+  <header class="header" role="banner">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo" aria-label="Home">
+        <div class="header__logo-mark">TH</div>
+        <div class="header__logo-text">MECHANICAL<br><strong>ENGINEER</strong></div>
+      </a>
+      <nav class="header__nav" aria-label="Main navigation"></nav>
+      <div class="header__cta"><a href="contact.html" class="btn btn--primary btn--sm">Get In Touch →</a></div>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="nav-toggle__open">☰</span><span class="nav-toggle__close">✕</span>
+      </button>
+    </div>
+  </header>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation"></nav>
+
+  <main id="main">
+    <section class="section">
+      <div class="container">
+        <p class="kicker">Portfolio</p>
+        <h1 class="section-title">3D Designs</h1>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:0.5rem;">
+          <p class="section-subtitle">Mechanical designs modeled in SOLIDWORKS — assemblies, parts, sheet metal, and engineering drawings.</p>
+          <span class="mono-label" id="item-count"></span>
+        </div>
+        <div class="filter-bar" id="filter-bar"></div>
+        <div class="card-grid" id="gallery-grid">
+          <div class="page-loading"><div class="spinner"></div><p class="page-loading__text">Loading designs...</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner container">
+      <span>© 2025 Tanbir Hasan</span>
+      <div class="footer__links">
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+        <a href="admin.html" title="Admin" style="opacity:0.3;">•</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>
