@@ -522,12 +522,12 @@
     },
     {
       "id": "badge-001",
-      "name": "CSWA",
-      "fullName": "Certified SOLIDWORKS Associate",
+      "name": "CSWA-S",
+      "fullName": "SOLIDWORKS Simulation Associate",
       "issuer": "Dassault Systèmes",
-      "date": "2024",
-      "image": "assets/images/placeholder-cswa-badge.png",
-      "verifyUrl": ""
+      "date": "25 Sep 2026",
+      "image": "assets/images/1792068293551_zexnd3_ASSOCIATE_-_SIMULATION.png",
+      "verifyUrl": "https://cv.virtualtester.com/qr/?b=SLDWRKS&i=C-HYTC84B6E5"
     },
     {
       "id": "badge-003",
@@ -616,6 +616,6 @@
     "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
     "ogImage": "assets/images/og-image.jpg",
     "version": "1.0.0",
-    "lastUpdated": "2026-10-15T11:54:14.574Z"
+    "lastUpdated": "2026-10-15T12:45:16.043Z"
   }
 }
