@@ -157,11 +157,12 @@
         "Storage Basket"
       ],
       "featured": true,
-      "thumbnail": "assets/images/1792087732406_msi42u_basket.png",
+      "thumbnail": "assets/images/1792088142679_47k16w_photo1.JPG",
       "sections": [],
       "keyNumbers": [],
       "images": [
-        "assets/images/1792087827485_frwewt_photo1.JPG"
+        "assets/images/1792087827485_frwewt_photo1.JPG",
+        "assets/images/1792088151428_zj2960_basket.png"
       ],
       "videos": [],
       "models": [],
@@ -617,6 +618,6 @@
     "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
     "ogImage": "assets/images/og-image.jpg",
     "version": "1.0.0",
-    "lastUpdated": "2026-10-15T18:10:44.497Z"
+    "lastUpdated": "2026-10-15T18:15:57.262Z"
   }
 }
