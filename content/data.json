@@ -140,6 +140,34 @@
   ],
   "designs": [
     {
+      "id": "des-003",
+      "title": "Woven textured storage basket",
+      "slug": "woven-textured-storage-basket",
+      "summary": "A detailed 3D CAD model of a woven-textured storage basket designed using SOLIDWORKS. The model features a rounded rectangular body, an open-top configuration, integrated side handles, and a repeating woven pattern across the outer walls. The design combines functional geometry with decorative surface detailing, demonstrating 3D part modeling, pattern design, and aesthetic product development. The rendered model highlights the basket's surface texture, proportions, and overall form.",
+      "software": "SOLIDWORKS",
+      "year": 2025,
+      "tags": [
+        "SOLIDWORKS",
+        "3D CAD",
+        "Product Design",
+        "Parametric Modeling",
+        "Surface Modeling",
+        "Pattern Design",
+        "Mechanical Design",
+        "Storage Basket"
+      ],
+      "featured": true,
+      "thumbnail": "assets/images/1792087732406_msi42u_basket.png",
+      "sections": [],
+      "keyNumbers": [],
+      "images": [
+        "assets/images/1792087827485_frwewt_photo1.JPG"
+      ],
+      "videos": [],
+      "models": [],
+      "reports": []
+    },
+    {
       "id": "des-001",
       "title": "Spur Gear Reduction Box",
       "slug": "spur-gear-reduction-box",
@@ -225,34 +253,6 @@
         }
       ],
       "images": [],
-      "videos": [],
-      "models": [],
-      "reports": []
-    },
-    {
-      "id": "des-003",
-      "title": "Woven textured storage basket",
-      "slug": "woven-textured-storage-basket",
-      "summary": "A detailed 3D CAD model of a woven-textured storage basket designed using SOLIDWORKS. The model features a rounded rectangular body, an open-top configuration, integrated side handles, and a repeating woven pattern across the outer walls. The design combines functional geometry with decorative surface detailing, demonstrating 3D part modeling, pattern design, and aesthetic product development. The rendered model highlights the basket's surface texture, proportions, and overall form.",
-      "software": "SOLIDWORKS",
-      "year": 2025,
-      "tags": [
-        "SOLIDWORKS",
-        "3D CAD",
-        "Product Design",
-        "Parametric Modeling",
-        "Surface Modeling",
-        "Pattern Design",
-        "Mechanical Design",
-        "Storage Basket"
-      ],
-      "featured": true,
-      "thumbnail": "assets/images/1792087732406_msi42u_basket.png",
-      "sections": [],
-      "keyNumbers": [],
-      "images": [
-        "assets/images/1792087827485_frwewt_photo1.JPG"
-      ],
       "videos": [],
       "models": [],
       "reports": []
@@ -617,6 +617,6 @@
     "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
     "ogImage": "assets/images/og-image.jpg",
     "version": "1.0.0",
-    "lastUpdated": "2026-10-15T18:10:34.540Z"
+    "lastUpdated": "2026-10-15T18:10:44.497Z"
   }
 }
