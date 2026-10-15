@@ -6,7 +6,7 @@
     "bio": "I am a Mechanical Design and Simulation Engineer specializing in 3D CAD modeling with SOLIDWORKS and computational analysis (CFD & FEA) with ANSYS. I combine rigorous engineering fundamentals with advanced simulation to design, validate, and optimize mechanical systems.",
     "location": "Dhaka, Bangladesh",
     "email": "tanbirhasan.mail@gmail.com",
-    "heroSubtitle": "A portfolio of precision-engineered 3D designs and validated simulations across CAD, CFD, and FEA.",
+    "heroSubtitle": "A portfolio of precision engineered 3D designs and validated simulations across CAD, CFD, and FEA.",
     "aboutSections": [
       {
         "heading": "What I Do",
@@ -631,6 +631,6 @@
     "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
     "ogImage": "assets/images/og-image.jpg",
     "version": "1.0.0",
-    "lastUpdated": "2026-10-15T17:56:47.339Z"
+    "lastUpdated": "2026-10-15T17:58:17.303Z"
   }
 }
