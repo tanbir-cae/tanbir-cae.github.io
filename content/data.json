@@ -544,7 +544,7 @@
       "id": "cert-002",
       "title": "Certified SOLIDWORKS Professional (CSWP)",
       "issuer": "Dassault Systèmes",
-      "date": "2025",
+      "date": "10 Sep 2026",
       "credentialId": "C-JKAMGVWPQH",
       "image": "assets/images/1792068732397_q7p6wm_CSWP_Certificate_C-JKAMGVWPQH.pdf",
       "verifyUrl": "https://cv.virtualtester.com/qr/?b=SLDWRKS&i=C-JKAMGVWPQH",
@@ -616,6 +616,6 @@
     "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
     "ogImage": "assets/images/og-image.jpg",
     "version": "1.0.0",
-    "lastUpdated": "2026-10-15T12:53:05.887Z"
+    "lastUpdated": "2026-10-15T12:53:26.375Z"
   }
 }
