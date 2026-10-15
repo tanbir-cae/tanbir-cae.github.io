@@ -592,15 +592,17 @@
     {
       "id": "exp-001",
       "type": "experience",
-      "title": "[PLACEHOLDER - Job Title]",
-      "organization": "[PLACEHOLDER - Company/Organization Name]",
-      "location": "Dhaka, Bangladesh",
-      "startDate": "2024",
-      "endDate": "Present",
-      "description": "[PLACEHOLDER - Describe your role, responsibilities, and key achievements. What engineering problems did you solve? What tools did you use?]",
+      "title": "Engineering Project Developer",
+      "organization": "Dept of IPE at JUST",
+      "location": "Jashore , Bangladesh",
+      "startDate": "May 2025",
+      "endDate": "October 2025",
+      "description": "Designed and fabricated a low-cost pneumatic training system integrating Arduino-based control, pneumatic actuators, solenoid valves, and sequential operation logic. The project focused on demonstrating industrial automation principles through a practical, hands-on training platform.",
       "highlights": [
-        "[PLACEHOLDER - Key achievement 1]",
-        "[PLACEHOLDER - Key achievement 2]"
+        "Arduino",
+        "pneumatic actuators",
+        "solenoid valves",
+        "sequential operation logic"
       ]
     }
   ],
@@ -629,6 +631,6 @@
     "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
     "ogImage": "assets/images/og-image.jpg",
     "version": "1.0.0",
-    "lastUpdated": "2026-10-15T17:50:52.160Z"
+    "lastUpdated": "2026-10-15T17:56:47.339Z"
   }
 }
