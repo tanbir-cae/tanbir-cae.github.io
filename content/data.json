@@ -38,10 +38,6 @@
           "level": 90
         },
         {
-          "name": "Sheet Metal Design",
-          "level": 80
-        },
-        {
           "name": "Weldments",
           "level": 75
         },
@@ -616,6 +612,6 @@
     "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
     "ogImage": "assets/images/og-image.jpg",
     "version": "1.0.0",
-    "lastUpdated": "2026-10-15T12:53:26.375Z"
+    "lastUpdated": "2026-10-15T12:57:12.161Z"
   }
 }
