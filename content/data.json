@@ -29,47 +29,116 @@
       "id": "sk-001",
       "category": "CAD & Modeling",
       "items": [
-        { "name": "SOLIDWORKS", "level": 95 },
-        { "name": "Part & Assembly Modeling", "level": 90 },
-        { "name": "Sheet Metal Design", "level": 80 },
-        { "name": "Weldments", "level": 75 },
-        { "name": "Engineering Drawings (GD&T)", "level": 85 },
-        { "name": "Surface Modeling", "level": 70 }
+        {
+          "name": "SOLIDWORKS",
+          "level": 95
+        },
+        {
+          "name": "Part & Assembly Modeling",
+          "level": 90
+        },
+        {
+          "name": "Sheet Metal Design",
+          "level": 80
+        },
+        {
+          "name": "Weldments",
+          "level": 75
+        },
+        {
+          "name": "Engineering Drawings (GD&T)",
+          "level": 85
+        },
+        {
+          "name": "Surface Modeling",
+          "level": 70
+        }
       ]
     },
     {
       "id": "sk-002",
       "category": "Simulation & Analysis",
       "items": [
-        { "name": "ANSYS Fluent (CFD)", "level": 85 },
-        { "name": "ANSYS Mechanical (FEA)", "level": 80 },
-        { "name": "SOLIDWORKS Simulation", "level": 75 },
-        { "name": "SOLIDWORKS Flow Simulation", "level": 70 },
-        { "name": "Meshing & Convergence Studies", "level": 80 },
-        { "name": "Thermal Analysis", "level": 75 }
+        {
+          "name": "ANSYS Fluent (CFD)",
+          "level": 85
+        },
+        {
+          "name": "ANSYS Mechanical (FEA)",
+          "level": 80
+        },
+        {
+          "name": "SOLIDWORKS Simulation",
+          "level": 75
+        },
+        {
+          "name": "SOLIDWORKS Flow Simulation",
+          "level": 70
+        },
+        {
+          "name": "Meshing & Convergence Studies",
+          "level": 80
+        },
+        {
+          "name": "Thermal Analysis",
+          "level": 75
+        }
       ]
     },
     {
       "id": "sk-003",
       "category": "Engineering Fundamentals",
       "items": [
-        { "name": "Solid Mechanics", "level": 85 },
-        { "name": "Fluid Mechanics", "level": 80 },
-        { "name": "Heat Transfer", "level": 75 },
-        { "name": "Machine Design", "level": 80 },
-        { "name": "Manufacturing Processes", "level": 75 },
-        { "name": "Material Science", "level": 70 }
+        {
+          "name": "Solid Mechanics",
+          "level": 85
+        },
+        {
+          "name": "Fluid Mechanics",
+          "level": 80
+        },
+        {
+          "name": "Heat Transfer",
+          "level": 75
+        },
+        {
+          "name": "Machine Design",
+          "level": 80
+        },
+        {
+          "name": "Manufacturing Processes",
+          "level": 75
+        },
+        {
+          "name": "Material Science",
+          "level": 70
+        }
       ]
     },
     {
       "id": "sk-004",
       "category": "Tools & Other",
       "items": [
-        { "name": "MATLAB", "level": 70 },
-        { "name": "Python", "level": 60 },
-        { "name": "Microsoft Office", "level": 85 },
-        { "name": "Technical Report Writing", "level": 80 },
-        { "name": "3D Printing & Prototyping", "level": 65 }
+        {
+          "name": "MATLAB",
+          "level": 70
+        },
+        {
+          "name": "Python",
+          "level": 60
+        },
+        {
+          "name": "Microsoft Office",
+          "level": 85
+        },
+        {
+          "name": "Technical Report Writing",
+          "level": 80
+        },
+        {
+          "name": "3D Printing & Prototyping",
+          "level": 65
+        }
       ]
     }
   ],
@@ -81,7 +150,11 @@
       "summary": "A two-stage spur gear reduction assembly with housing, designed for a 5:1 speed reduction ratio. Includes all internal components: shafts, bearings, keys, and seals.",
       "software": "SOLIDWORKS",
       "year": 2025,
-      "tags": ["Assembly", "Gears", "Machine Design"],
+      "tags": [
+        "Assembly",
+        "Gears",
+        "Machine Design"
+      ],
       "featured": true,
       "thumbnail": "assets/images/placeholder-gear-thumb.jpg",
       "sections": [
@@ -95,10 +168,22 @@
         }
       ],
       "keyNumbers": [
-        { "label": "Reduction Ratio", "value": "5:1" },
-        { "label": "Input Power", "value": "2.5 kW" },
-        { "label": "Input Speed", "value": "1440 RPM" },
-        { "label": "Number of Parts", "value": "34" }
+        {
+          "label": "Reduction Ratio",
+          "value": "5:1"
+        },
+        {
+          "label": "Input Power",
+          "value": "2.5 kW"
+        },
+        {
+          "label": "Input Speed",
+          "value": "1440 RPM"
+        },
+        {
+          "label": "Number of Parts",
+          "value": "34"
+        }
       ],
       "images": [],
       "videos": [],
@@ -112,7 +197,11 @@
       "summary": "Complete 3D model of a 20-ton hydraulic bottle jack with exploded view and engineering drawings. Modeled with accurate thread profiles and seal grooves.",
       "software": "SOLIDWORKS",
       "year": 2025,
-      "tags": ["Part Modeling", "Hydraulics", "Engineering Drawings"],
+      "tags": [
+        "Part Modeling",
+        "Hydraulics",
+        "Engineering Drawings"
+      ],
       "featured": true,
       "thumbnail": "assets/images/placeholder-jack-thumb.jpg",
       "sections": [
@@ -122,10 +211,22 @@
         }
       ],
       "keyNumbers": [
-        { "label": "Capacity", "value": "20 ton" },
-        { "label": "Stroke", "value": "150 mm" },
-        { "label": "Min. Height", "value": "215 mm" },
-        { "label": "Components", "value": "18" }
+        {
+          "label": "Capacity",
+          "value": "20 ton"
+        },
+        {
+          "label": "Stroke",
+          "value": "150 mm"
+        },
+        {
+          "label": "Min. Height",
+          "value": "215 mm"
+        },
+        {
+          "label": "Components",
+          "value": "18"
+        }
       ],
       "images": [],
       "videos": [],
@@ -139,7 +240,11 @@
       "summary": "Backward-curved centrifugal pump impeller with 6 blades, designed using Euler's turbomachinery equations. Includes draft analysis for casting feasibility.",
       "software": "SOLIDWORKS",
       "year": 2024,
-      "tags": ["Surface Modeling", "Turbomachinery", "Fluid Systems"],
+      "tags": [
+        "Surface Modeling",
+        "Turbomachinery",
+        "Fluid Systems"
+      ],
       "featured": false,
       "thumbnail": "assets/images/placeholder-impeller-thumb.jpg",
       "sections": [
@@ -149,10 +254,22 @@
         }
       ],
       "keyNumbers": [
-        { "label": "Blades", "value": "6" },
-        { "label": "Outer Diameter", "value": "220 mm" },
-        { "label": "Design Head", "value": "25 m" },
-        { "label": "Blade Angle (outlet)", "value": "32°" }
+        {
+          "label": "Blades",
+          "value": "6"
+        },
+        {
+          "label": "Outer Diameter",
+          "value": "220 mm"
+        },
+        {
+          "label": "Design Head",
+          "value": "25 m"
+        },
+        {
+          "label": "Blade Angle (outlet)",
+          "value": "32°"
+        }
       ],
       "images": [],
       "videos": [],
@@ -166,7 +283,11 @@
       "summary": "Weld neck flange assembly for a 4-inch Class 150 piping system, modeled per ASME B16.5 dimensional standards with bolt pattern and gasket.",
       "software": "SOLIDWORKS",
       "year": 2024,
-      "tags": ["Assembly", "Piping", "Standards"],
+      "tags": [
+        "Assembly",
+        "Piping",
+        "Standards"
+      ],
       "featured": false,
       "thumbnail": "assets/images/placeholder-flange-thumb.jpg",
       "sections": [
@@ -176,10 +297,22 @@
         }
       ],
       "keyNumbers": [
-        { "label": "Pipe Size", "value": "4 inch" },
-        { "label": "Pressure Class", "value": "150" },
-        { "label": "Bolt Circle Dia.", "value": "241.3 mm" },
-        { "label": "Number of Bolts", "value": "8" }
+        {
+          "label": "Pipe Size",
+          "value": "4 inch"
+        },
+        {
+          "label": "Pressure Class",
+          "value": "150"
+        },
+        {
+          "label": "Bolt Circle Dia.",
+          "value": "241.3 mm"
+        },
+        {
+          "label": "Number of Bolts",
+          "value": "8"
+        }
       ],
       "images": [],
       "videos": [],
@@ -196,7 +329,11 @@
       "software": "ANSYS",
       "type": "FEA",
       "year": 2025,
-      "tags": ["Static Structural", "Pressure Vessel", "Stress Analysis"],
+      "tags": [
+        "Static Structural",
+        "Pressure Vessel",
+        "Stress Analysis"
+      ],
       "featured": true,
       "thumbnail": "assets/images/placeholder-vessel-thumb.jpg",
       "sections": [
@@ -214,10 +351,22 @@
         }
       ],
       "keyNumbers": [
-        { "label": "Max Stress", "value": "142 MPa" },
-        { "label": "Max Deformation", "value": "0.23 mm" },
-        { "label": "Factor of Safety", "value": "1.31" },
-        { "label": "Mesh Elements", "value": "184,500" }
+        {
+          "label": "Max Stress",
+          "value": "142 MPa"
+        },
+        {
+          "label": "Max Deformation",
+          "value": "0.23 mm"
+        },
+        {
+          "label": "Factor of Safety",
+          "value": "1.31"
+        },
+        {
+          "label": "Mesh Elements",
+          "value": "184,500"
+        }
       ],
       "images": [],
       "videos": [],
@@ -232,7 +381,11 @@
       "software": "ANSYS",
       "type": "CFD",
       "year": 2025,
-      "tags": ["External Aerodynamics", "Drag", "Turbulence"],
+      "tags": [
+        "External Aerodynamics",
+        "Drag",
+        "Turbulence"
+      ],
       "featured": true,
       "thumbnail": "assets/images/placeholder-sedan-thumb.jpg",
       "sections": [
@@ -246,10 +399,22 @@
         }
       ],
       "keyNumbers": [
-        { "label": "Drag Coefficient (Cd)", "value": "0.327" },
-        { "label": "Frontal Area", "value": "2.16 m²" },
-        { "label": "Inlet Velocity", "value": "27.78 m/s" },
-        { "label": "Mesh Cells", "value": "3.2M" }
+        {
+          "label": "Drag Coefficient (Cd)",
+          "value": "0.327"
+        },
+        {
+          "label": "Frontal Area",
+          "value": "2.16 m²"
+        },
+        {
+          "label": "Inlet Velocity",
+          "value": "27.78 m/s"
+        },
+        {
+          "label": "Mesh Cells",
+          "value": "3.2M"
+        }
       ],
       "images": [],
       "videos": [],
@@ -264,7 +429,11 @@
       "software": "ANSYS",
       "type": "FEA",
       "year": 2024,
-      "tags": ["Modal Analysis", "Vibration", "Structural Dynamics"],
+      "tags": [
+        "Modal Analysis",
+        "Vibration",
+        "Structural Dynamics"
+      ],
       "featured": false,
       "thumbnail": "assets/images/placeholder-beam-thumb.jpg",
       "sections": [
@@ -274,10 +443,22 @@
         }
       ],
       "keyNumbers": [
-        { "label": "1st Natural Freq.", "value": "16.8 Hz" },
-        { "label": "2nd Natural Freq.", "value": "105.2 Hz" },
-        { "label": "3rd Natural Freq.", "value": "294.5 Hz" },
-        { "label": "Error vs. Theory", "value": "<1.5%" }
+        {
+          "label": "1st Natural Freq.",
+          "value": "16.8 Hz"
+        },
+        {
+          "label": "2nd Natural Freq.",
+          "value": "105.2 Hz"
+        },
+        {
+          "label": "3rd Natural Freq.",
+          "value": "294.5 Hz"
+        },
+        {
+          "label": "Error vs. Theory",
+          "value": "<1.5%"
+        }
       ],
       "images": [],
       "videos": [],
@@ -292,7 +473,11 @@
       "software": "ANSYS",
       "type": "CFD",
       "year": 2024,
-      "tags": ["Heat Transfer", "Conjugate", "Pipe Flow"],
+      "tags": [
+        "Heat Transfer",
+        "Conjugate",
+        "Pipe Flow"
+      ],
       "featured": false,
       "thumbnail": "assets/images/placeholder-pipeflow-thumb.jpg",
       "sections": [
@@ -302,10 +487,22 @@
         }
       ],
       "keyNumbers": [
-        { "label": "Reynolds Number", "value": "15,000" },
-        { "label": "Nusselt Number", "value": "92.4" },
-        { "label": "Outlet Temp Rise", "value": "8.3 °C" },
-        { "label": "Error vs. Correlation", "value": "3.2%" }
+        {
+          "label": "Reynolds Number",
+          "value": "15,000"
+        },
+        {
+          "label": "Nusselt Number",
+          "value": "92.4"
+        },
+        {
+          "label": "Outlet Temp Rise",
+          "value": "8.3 °C"
+        },
+        {
+          "label": "Error vs. Correlation",
+          "value": "3.2%"
+        }
       ],
       "images": [],
       "videos": [],
@@ -351,7 +548,10 @@
       "credentialId": "[PLACEHOLDER - Add your credential ID]",
       "image": "assets/images/placeholder-cswa-cert.jpg",
       "verifyUrl": "",
-      "tags": ["SOLIDWORKS", "CAD"]
+      "tags": [
+        "SOLIDWORKS",
+        "CAD"
+      ]
     },
     {
       "id": "cert-002",
@@ -361,7 +561,10 @@
       "credentialId": "[PLACEHOLDER - Add your credential ID]",
       "image": "assets/images/placeholder-cswp-cert.jpg",
       "verifyUrl": "",
-      "tags": ["SOLIDWORKS", "CAD"]
+      "tags": [
+        "SOLIDWORKS",
+        "CAD"
+      ]
     },
     {
       "id": "cert-003",
@@ -371,7 +574,9 @@
       "credentialId": "[PLACEHOLDER]",
       "image": "assets/images/placeholder-cert.jpg",
       "verifyUrl": "",
-      "tags": ["[PLACEHOLDER]"]
+      "tags": [
+        "[PLACEHOLDER]"
+      ]
     }
   ],
   "experience": [
@@ -407,10 +612,10 @@
     }
   ],
   "meta": {
-    "siteTitle": "Tanbir Hasan — Mechanical Design & Simulation Engineer",
+    "siteTitle": "Tanbir Hasan - Mechanical Design & Simulation Engineer",
     "siteDescription": "Portfolio of Tanbir Hasan: 3D CAD designs in SOLIDWORKS and CFD/FEA simulations in ANSYS.",
     "ogImage": "assets/images/og-image.jpg",
     "version": "1.0.0",
-    "lastUpdated": ""
+    "lastUpdated": "2026-10-15T09:00:10.962Z"
   }
 }
