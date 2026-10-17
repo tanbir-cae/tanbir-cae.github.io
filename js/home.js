@@ -528,10 +528,13 @@
   }
 
   /* ==========================================================
-     THREE-SCENE HERO BACKGROUND ANIMATION
-     Scene 1: Rotating Mechanical Gear (0-5s)
-     Scene 2: Drone CFD Simulation (5-10s)
-     Scene 3: Structural FEA Visualization (10-15s)
+     CINEMATIC SUPERSONIC ROCKET CFD SIMULATION
+     - Text-free, purely graphical engineering visualization
+     - 3/4 perspective, diagonal orientation (nose upper-right, exhaust lower-left)
+     - Scaled down by ~25% to fit safely within container with ample padding
+     - Zero clipping on nose, fins, bow shock, or exhaust plume
+     - Mach bow shock, streamline particle flow, De Laval shock diamonds
+     - Phases: Reveal -> 3D Inspection -> CFD Flow -> Engine Plume -> Seamless Loop
      ========================================================== */
   function initHeroBackground(container) {
     var canvas = document.createElement('canvas');
@@ -541,29 +544,27 @@
     var W, H, dpr;
     var running = true;
     var startTime = performance.now();
-    var CYCLE = 15000;       // 15 seconds per full cycle
-    var SCENE_DUR = 5000;    // 5 seconds per scene
-    var FADE = 800;          // 0.8s crossfade
 
-    // Color palette
-    var C = {
-      bg: '#F7F8FA',
-      primary: '#1F4E79',
-      accent: '#2563EB',
-      silver: '#B0BEC5',
-      lightBlue: '#DCEAF8',
-      paleBlue: '#E8EFF6',
-      cyan: '#4DD0E1',
-      grid: 'rgba(31, 78, 121, 0.06)',
-      blueprint: 'rgba(31, 78, 121, 0.04)',
-      // Stress contour
-      stressBlue: '#4575B4',
-      stressCyan: '#74ADD1',
-      stressGreen: '#ABD9E9',
-      stressYellow: '#FEE090',
-      stressOrange: '#FDAE61',
-      stressRed: '#F46D43'
-    };
+    // 20-second continuous cycle
+    var CYCLE = 20000;
+    // Phases (ms): 0: Reveal(3.5s), 1: 3D Inspection(4.5s), 2: CFD Flow(4.5s), 3: Ignition(5.0s), 4: Seamless Loop Fade(2.5s)
+    var PHASES = [3500, 4500, 4500, 5000, 2500];
+    var PHASE_STARTS = [];
+    (function () {
+      var s = 0;
+      for (var i = 0; i < PHASES.length; i++) {
+        PHASE_STARTS.push(s);
+        s += PHASES[i];
+      }
+    })();
+
+    // ---- Particle Systems ----
+    var flowParticles = [];
+    var exhaustParticles = [];
+    var sparkParticles = [];
+    var MAX_FLOW = 50;
+    var MAX_EXHAUST = 55;
+    var MAX_SPARKS = 25;
 
     function resize() {
       var rect = container.getBoundingClientRect();
@@ -572,586 +573,822 @@
       H = canvas.height = Math.round(rect.height * dpr);
       canvas.style.width = rect.width + 'px';
       canvas.style.height = rect.height + 'px';
+      initParticlePools();
     }
 
-    function getSceneOpacity(t, sceneIdx) {
-      var sceneStart = sceneIdx * SCENE_DUR;
-      var sceneEnd = sceneStart + SCENE_DUR;
-      var tMod = t % CYCLE;
+    // Diagonal unit vectors for flow along the flight axis
+    // Flight direction: pointing upper-right (~28 degrees above horizontal)
+    var FLIGHT_ANGLE = 28 * Math.PI / 180;
+    var DIR_FLIGHT_X = Math.cos(FLIGHT_ANGLE);
+    var DIR_FLIGHT_Y = -Math.sin(FLIGHT_ANGLE); // upward in canvas is negative Y
 
-      // Handle wrap-around for scene 2 (last scene fading into first)
-      if (sceneIdx === 0 && tMod > CYCLE - FADE) {
-        return Math.min(1, (tMod - (CYCLE - FADE)) / FADE);
-      }
+    // Oncoming airflow moves in the opposite direction (from upper-right to lower-left)
+    var DIR_FLOW_X = -DIR_FLIGHT_X;
+    var DIR_FLOW_Y = -DIR_FLIGHT_Y; // downward in canvas is positive Y
 
-      if (tMod < sceneStart - FADE || tMod > sceneEnd + FADE) return 0;
-      if (tMod < sceneStart) return 0;
-
-      var opacity = 1;
-      // Fade in
-      if (tMod < sceneStart + FADE) {
-        opacity = (tMod - sceneStart) / FADE;
-      }
-      // Fade out
-      if (tMod > sceneEnd - FADE) {
-        opacity = Math.max(0, 1 - (tMod - (sceneEnd - FADE)) / FADE);
-      }
-      return Math.max(0, Math.min(1, opacity));
-    }
-
-    /* -------- SCENE 1: Mechanical Gear -------- */
-    function drawGear(t, alpha) {
-      if (alpha <= 0) return;
-      ctx.save();
-      ctx.globalAlpha = alpha;
-
-      var cx = W * 0.52;
-      var cy = H * 0.48;
-      var baseR = Math.min(W, H) * 0.34;
-      var rotation = (t / 1000) * 0.15; // slow rotation
-
-      // Blueprint concentric circles
-      ctx.strokeStyle = C.grid;
-      ctx.lineWidth = 1 * dpr;
-      for (var rr = 0.15; rr <= 0.55; rr += 0.1) {
-        ctx.beginPath();
-        ctx.arc(cx, cy, baseR * rr, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      // Cross-hair lines
-      ctx.strokeStyle = C.blueprint;
-      ctx.setLineDash([6 * dpr, 6 * dpr]);
-      ctx.beginPath();
-      ctx.moveTo(cx - baseR * 0.6, cy);
-      ctx.lineTo(cx + baseR * 0.6, cy);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - baseR * 0.6);
-      ctx.lineTo(cx, cy + baseR * 0.6);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(rotation);
-
-      // Main gear body
-      var teeth = 18;
-      var outerR = baseR * 0.44;
-      var innerR = baseR * 0.36;
-      var tipR = baseR * 0.46;
-
-      // Gear teeth path
-      ctx.beginPath();
-      for (var i = 0; i < teeth; i++) {
-        var a0 = (i / teeth) * Math.PI * 2;
-        var a1 = ((i + 0.2) / teeth) * Math.PI * 2;
-        var a2 = ((i + 0.3) / teeth) * Math.PI * 2;
-        var a3 = ((i + 0.5) / teeth) * Math.PI * 2;
-        var a4 = ((i + 0.7) / teeth) * Math.PI * 2;
-        var a5 = ((i + 0.8) / teeth) * Math.PI * 2;
-
-        if (i === 0) {
-          ctx.moveTo(innerR * Math.cos(a0), innerR * Math.sin(a0));
-        } else {
-          ctx.lineTo(innerR * Math.cos(a0), innerR * Math.sin(a0));
-        }
-        ctx.lineTo(outerR * Math.cos(a1), outerR * Math.sin(a1));
-        ctx.lineTo(tipR * Math.cos(a2), tipR * Math.sin(a2));
-        ctx.lineTo(tipR * Math.cos(a3), tipR * Math.sin(a3));
-        ctx.lineTo(outerR * Math.cos(a4), outerR * Math.sin(a4));
-        ctx.lineTo(innerR * Math.cos(a5), innerR * Math.sin(a5));
-      }
-      ctx.closePath();
-
-      // Gradient fill
-      var gearGrad = ctx.createRadialGradient(0, 0, baseR * 0.1, 0, 0, tipR);
-      gearGrad.addColorStop(0, 'rgba(31, 78, 121, 0.08)');
-      gearGrad.addColorStop(0.7, 'rgba(31, 78, 121, 0.04)');
-      gearGrad.addColorStop(1, 'rgba(31, 78, 121, 0.02)');
-      ctx.fillStyle = gearGrad;
-      ctx.fill();
-
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.15)';
-      ctx.lineWidth = 1.5 * dpr;
-      ctx.stroke();
-
-      // Hub hole
-      var holeR = baseR * 0.12;
-      ctx.beginPath();
-      ctx.arc(0, 0, holeR, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.18)';
-      ctx.lineWidth = 2 * dpr;
-      ctx.stroke();
-
-      // Hub circle
-      ctx.beginPath();
-      ctx.arc(0, 0, baseR * 0.07, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(31, 78, 121, 0.05)';
-      ctx.fill();
-
-      // Keyway
-      ctx.fillStyle = 'rgba(31, 78, 121, 0.08)';
-      ctx.fillRect(-2 * dpr, -holeR, 4 * dpr, holeR);
-
-      // Spokes
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.08)';
-      ctx.lineWidth = 3 * dpr;
-      for (var s = 0; s < 6; s++) {
-        var sa = (s / 6) * Math.PI * 2;
-        ctx.beginPath();
-        ctx.moveTo(holeR * 1.3 * Math.cos(sa), holeR * 1.3 * Math.sin(sa));
-        ctx.lineTo(innerR * 0.85 * Math.cos(sa), innerR * 0.85 * Math.sin(sa));
-        ctx.stroke();
-      }
-
-      ctx.restore();
-
-      // Second smaller gear (meshing)
-      var cx2 = cx + outerR * 1.3;
-      var cy2 = cy - outerR * 0.6;
-      var scale2 = 0.55;
-      ctx.save();
-      ctx.translate(cx2, cy2);
-      ctx.rotate(-rotation * (1 / scale2) + 0.15); // counter-rotate with ratio
-
-      var teeth2 = 12;
-      var oR2 = outerR * scale2 * 0.95;
-      var iR2 = innerR * scale2 * 0.95;
-      var tR2 = tipR * scale2 * 0.95;
-
-      ctx.beginPath();
-      for (var j = 0; j < teeth2; j++) {
-        var b0 = (j / teeth2) * Math.PI * 2;
-        var b1 = ((j + 0.2) / teeth2) * Math.PI * 2;
-        var b2 = ((j + 0.3) / teeth2) * Math.PI * 2;
-        var b3 = ((j + 0.5) / teeth2) * Math.PI * 2;
-        var b4 = ((j + 0.7) / teeth2) * Math.PI * 2;
-        var b5 = ((j + 0.8) / teeth2) * Math.PI * 2;
-        if (j === 0) ctx.moveTo(iR2 * Math.cos(b0), iR2 * Math.sin(b0));
-        else ctx.lineTo(iR2 * Math.cos(b0), iR2 * Math.sin(b0));
-        ctx.lineTo(oR2 * Math.cos(b1), oR2 * Math.sin(b1));
-        ctx.lineTo(tR2 * Math.cos(b2), tR2 * Math.sin(b2));
-        ctx.lineTo(tR2 * Math.cos(b3), tR2 * Math.sin(b3));
-        ctx.lineTo(oR2 * Math.cos(b4), oR2 * Math.sin(b4));
-        ctx.lineTo(iR2 * Math.cos(b5), iR2 * Math.sin(b5));
-      }
-      ctx.closePath();
-      ctx.fillStyle = 'rgba(31, 78, 121, 0.05)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.12)';
-      ctx.lineWidth = 1.2 * dpr;
-      ctx.stroke();
-
-      // Hub
-      ctx.beginPath();
-      ctx.arc(0, 0, baseR * 0.06, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.15)';
-      ctx.lineWidth = 1.5 * dpr;
-      ctx.stroke();
-
-      ctx.restore();
-
-      // Dimension label
-      ctx.save();
-      ctx.font = (9 * dpr) + 'px JetBrains Mono, monospace';
-      ctx.fillStyle = 'rgba(31, 78, 121, 0.2)';
-      ctx.textAlign = 'center';
-      ctx.fillText('Module 2.5 · 18T', cx, cy + outerR + 20 * dpr);
-      ctx.restore();
-
-      ctx.restore();
-    }
-
-    /* -------- SCENE 2: Drone CFD -------- */
-    var flowParticles = [];
-    function initFlowParticles() {
+    function initParticlePools() {
       flowParticles = [];
-      for (var i = 0; i < 60; i++) {
-        flowParticles.push({
-          x: Math.random() * W,
-          y: Math.random() * H,
-          vx: -0.3 - Math.random() * 0.6,
-          vy: 0.2 + Math.random() * 0.5,
-          life: Math.random(),
-          maxLife: 0.6 + Math.random() * 0.4
-        });
+      for (var i = 0; i < MAX_FLOW; i++) {
+        flowParticles.push(createFlowParticle(true));
+      }
+      exhaustParticles = [];
+      for (var j = 0; j < MAX_EXHAUST; j++) {
+        exhaustParticles.push(createExhaustParticle());
+      }
+      sparkParticles = [];
+      for (var k = 0; k < MAX_SPARKS; k++) {
+        sparkParticles.push(createSparkParticle());
       }
     }
 
-    function drawDroneCFD(t, alpha) {
-      if (alpha <= 0) return;
+    function createFlowParticle(randomProgress) {
+      // Streamline offset lateral to flight path
+      var lateralOffset = (Math.random() - 0.5) * H * 0.9;
+      // Normal to flow direction: (-DIR_FLOW_Y, DIR_FLOW_X)
+      var normX = -DIR_FLOW_Y;
+      var normY = DIR_FLOW_X;
+
+      // Spawn along upper-right entry envelope
+      var distAlongPath = randomProgress ? Math.random() * (W + H) : (W + H) * 0.55 + Math.random() * 80;
+      var cx0 = W * 0.50;
+      var cy0 = H * 0.48;
+
+      var px = cx0 - DIR_FLOW_X * distAlongPath + normX * lateralOffset;
+      var py = cy0 - DIR_FLOW_Y * distAlongPath + normY * lateralOffset;
+
+      var speed = 2.4 + Math.random() * 2.2;
+      return {
+        x: px,
+        y: py,
+        speed: speed,
+        vx: DIR_FLOW_X * speed,
+        vy: DIR_FLOW_Y * speed,
+        lateralOffset: lateralOffset,
+        trail: [],
+        maxTrail: 8 + Math.floor(Math.random() * 8)
+      };
+    }
+
+    function createExhaustParticle() {
+      return {
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        life: 0,
+        maxLife: 0.35 + Math.random() * 0.45,
+        size: 1.5 + Math.random() * 3,
+        active: false
+      };
+    }
+
+    function createSparkParticle() {
+      return {
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        life: 0,
+        maxLife: 0.25 + Math.random() * 0.35,
+        size: 1 + Math.random() * 1.5,
+        active: false
+      };
+    }
+
+    // ---- Compact 3D Rocket Geometry (Scaled down ~25% for safety margin) ----
+    var NOSE_TIP_X = 66;
+    var NOSE_BASE_X = 22;
+    var BODY_RADIUS = 12.5;
+    var BODY_AFT_X = -38;
+    var BOATTAIL_AFT_X = -52;
+    var NOZZLE_THROAT_X = -52;
+    var NOZZLE_EXIT_X = -66;
+    var NOZZLE_THROAT_R = 7.5;
+    var NOZZLE_EXIT_R = 11.5;
+
+    var FIN_X_ROOT_FRONT = -18;
+    var FIN_X_ROOT_BACK = -48;
+    var FIN_X_TIP_FRONT = -26;
+    var FIN_X_TIP_BACK = -44;
+    var FIN_SPAN = 18.5;
+
+    var rocketStations = [];
+    (function () {
+      var noseSlices = 10;
+      for (var i = 0; i <= noseSlices; i++) {
+        var t = i / noseSlices;
+        var x = NOSE_BASE_X + (NOSE_TIP_X - NOSE_BASE_X) * t;
+        var r = BODY_RADIUS * Math.sqrt(Math.max(0, 1 - Math.pow(t, 1.8)));
+        rocketStations.push({ x: x, r: r, type: 'nose' });
+      }
+      rocketStations.push({ x: 8, r: BODY_RADIUS, type: 'body' });
+      rocketStations.push({ x: -10, r: BODY_RADIUS, type: 'body' });
+      rocketStations.push({ x: -24, r: BODY_RADIUS, type: 'body' });
+      rocketStations.push({ x: BODY_AFT_X, r: BODY_RADIUS, type: 'body' });
+      rocketStations.push({ x: BOATTAIL_AFT_X, r: 10.0, type: 'boattail' });
+      rocketStations.push({ x: NOZZLE_THROAT_X, r: NOZZLE_THROAT_R, type: 'nozzle-throat' });
+      rocketStations.push({ x: NOZZLE_EXIT_X, r: NOZZLE_EXIT_R, type: 'nozzle-exit' });
+      rocketStations.sort(function (a, b) { return b.x - a.x; });
+    })();
+
+    // 3D rotation transform: Pitch (around Z), Yaw (around Y), Roll (around X)
+    function transform3D(x, y, z, pitch, yaw, roll) {
+      // Roll around X
+      var cr = Math.cos(roll), sr = Math.sin(roll);
+      var y1 = y * cr - z * sr;
+      var z1 = y * sr + z * cr;
+
+      // Pitch around Z (negative pitch tilts nose UP in canvas)
+      var cp = Math.cos(pitch), sp = Math.sin(pitch);
+      var x2 = x * cp - y1 * sp;
+      var y2 = x * sp + y1 * cp;
+
+      // Yaw around Y
+      var cy = Math.cos(yaw), sy = Math.sin(yaw);
+      var x3 = x2 * cy + z1 * sy;
+      var z3 = -x2 * sy + z1 * cy;
+
+      return { x: x3, y: y2, z: z3 };
+    }
+
+    var FOV = 440;
+    function project3D(p3, cx, cy, scale) {
+      var s = FOV / (FOV + p3.z + 70);
+      return {
+        x: cx + p3.x * s * scale,
+        y: cy - p3.y * s * scale,
+        z: p3.z,
+        s: s * scale
+      };
+    }
+
+    function getPhaseInfo(elapsed) {
+      var tMod = elapsed % CYCLE;
+      var phase = 0;
+      for (var i = PHASES.length - 1; i >= 0; i--) {
+        if (tMod >= PHASE_STARTS[i]) {
+          phase = i;
+          break;
+        }
+      }
+      var phaseT = (tMod - PHASE_STARTS[phase]) / PHASES[phase];
+      return { phase: phase, t: phaseT, tMod: tMod };
+    }
+
+    function easeInOut(t) {
+      return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    }
+    function easeOut(t) {
+      return 1 - (1 - t) * (1 - t);
+    }
+
+    // ---- 1. Subtle Engineering Grid (No Text, Purely Graphical) ----
+    function drawEngineeringGrid(cx, cy, scale, alpha, pitch, yaw) {
+      if (alpha <= 0.01) return;
       ctx.save();
-      ctx.globalAlpha = alpha;
+      ctx.globalAlpha = alpha * 0.45;
 
-      var cx = W * 0.52;
-      var cy = H * 0.45;
-      var sz = Math.min(W, H) * 0.28;
+      var step = 24 * scale;
+      var gridSpan = 4 * step;
+      var floorY = -36;
 
-      // Drone body
-      var armLen = sz * 0.45;
-      var bodyR = sz * 0.1;
-      var motorR = sz * 0.065;
-      var propR = sz * 0.18;
-      var armAngles = [-0.6, 0.6, Math.PI - 0.6, Math.PI + 0.6];
-      var propAngle = (t / 1000) * 8;
-
-      // Faint computational mesh background
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.03)';
       ctx.lineWidth = 0.5 * dpr;
-      var meshStep = sz * 0.08;
-      for (var mx = cx - sz; mx <= cx + sz; mx += meshStep) {
-        ctx.beginPath();
-        ctx.moveTo(mx, cy - sz * 0.7);
-        ctx.lineTo(mx, cy + sz * 0.7);
-        ctx.stroke();
-      }
-      for (var my = cy - sz * 0.7; my <= cy + sz * 0.7; my += meshStep) {
-        ctx.beginPath();
-        ctx.moveTo(cx - sz, my);
-        ctx.lineTo(cx + sz, my);
-        ctx.stroke();
-      }
-
-      // Pressure contour (faint oval)
-      var pressGrad = ctx.createRadialGradient(cx, cy, bodyR, cx, cy, sz * 0.7);
-      pressGrad.addColorStop(0, 'rgba(77, 208, 225, 0.06)');
-      pressGrad.addColorStop(0.4, 'rgba(37, 99, 235, 0.03)');
-      pressGrad.addColorStop(1, 'rgba(31, 78, 121, 0.0)');
-      ctx.fillStyle = pressGrad;
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, sz * 0.7, sz * 0.5, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Arms
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.15)';
-      ctx.lineWidth = 2.5 * dpr;
-      ctx.lineCap = 'round';
-      for (var ai = 0; ai < armAngles.length; ai++) {
-        var ax = cx + armLen * Math.cos(armAngles[ai]);
-        var ay = cy + armLen * Math.sin(armAngles[ai]);
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(ax, ay);
-        ctx.stroke();
-
-        // Motor housing
-        ctx.beginPath();
-        ctx.arc(ax, ay, motorR, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(31, 78, 121, 0.06)';
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(31, 78, 121, 0.12)';
-        ctx.lineWidth = 1.5 * dpr;
-        ctx.stroke();
-
-        // Spinning propeller (disc effect)
-        ctx.beginPath();
-        ctx.arc(ax, ay, propR, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(37, 99, 235, 0.03)';
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(37, 99, 235, 0.08)';
-        ctx.lineWidth = 0.8 * dpr;
-        ctx.setLineDash([3 * dpr, 3 * dpr]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Prop blades (motion blur)
-        var direction = ai < 2 ? 1 : -1;
-        for (var blade = 0; blade < 2; blade++) {
-          var ba = propAngle * direction + blade * Math.PI;
-          ctx.beginPath();
-          ctx.moveTo(ax - propR * 0.9 * Math.cos(ba), ay - propR * 0.9 * Math.sin(ba));
-          ctx.lineTo(ax + propR * 0.9 * Math.cos(ba), ay + propR * 0.9 * Math.sin(ba));
-          ctx.strokeStyle = 'rgba(31, 78, 121, 0.1)';
-          ctx.lineWidth = 2 * dpr;
-          ctx.stroke();
-        }
-      }
-
-      // Body frame
-      ctx.beginPath();
-      ctx.arc(cx, cy, bodyR, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(31, 78, 121, 0.08)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.18)';
-      ctx.lineWidth = 2 * dpr;
-      ctx.stroke();
-
-      // Inner body detail
-      ctx.beginPath();
-      ctx.arc(cx, cy, bodyR * 0.5, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.1)';
-      ctx.lineWidth = 1 * dpr;
-      ctx.stroke();
-
-      // Airflow streamlines
-      if (flowParticles.length === 0) initFlowParticles();
-      ctx.lineWidth = 1 * dpr;
-      ctx.lineCap = 'round';
-      for (var fi = 0; fi < flowParticles.length; fi++) {
-        var fp = flowParticles[fi];
-        fp.x += fp.vx * dpr;
-        fp.y += fp.vy * dpr;
-        fp.life -= 0.003;
-
-        // Deflect near drone
-        var fdx = fp.x - cx;
-        var fdy = fp.y - cy;
-        var fdist = Math.sqrt(fdx * fdx + fdy * fdy);
-        if (fdist < sz * 0.5 && fdist > 0) {
-          fp.vx += (fdx / fdist) * 0.04;
-          fp.vy += (fdy / fdist) * 0.06;
-          // Downwash effect beneath motors
-          if (fdy > 0) fp.vy += 0.15;
-        }
-        fp.vy *= 0.99;
-        fp.vx *= 0.99;
-
-        // Reset
-        if (fp.life <= 0 || fp.x < 0 || fp.x > W || fp.y > H || fp.y < 0) {
-          fp.x = cx + (Math.random() - 0.5) * sz * 2;
-          fp.y = cy - sz * 0.6 - Math.random() * sz * 0.3;
-          fp.vx = -0.3 + Math.random() * 0.6;
-          fp.vy = 0.2 + Math.random() * 0.4;
-          fp.life = fp.maxLife;
-        }
-
-        var particleAlpha = fp.life / fp.maxLife;
-        // Color by speed
-        var speed = Math.sqrt(fp.vx * fp.vx + fp.vy * fp.vy);
-        var hue = 200 - speed * 30; // blue to cyan
-        ctx.strokeStyle = 'hsla(' + hue + ', 60%, 55%, ' + (particleAlpha * 0.3) + ')';
-        ctx.beginPath();
-        ctx.moveTo(fp.x, fp.y);
-        ctx.lineTo(fp.x - fp.vx * 8, fp.y - fp.vy * 8);
-        ctx.stroke();
-      }
-
-      // Label
-      ctx.font = (9 * dpr) + 'px JetBrains Mono, monospace';
-      ctx.fillStyle = 'rgba(31, 78, 121, 0.18)';
-      ctx.textAlign = 'center';
-      ctx.fillText('CFD · Velocity Contour', cx, cy + sz * 0.85);
-
-      ctx.restore();
-    }
-
-    /* -------- SCENE 3: Structural FEA -------- */
-    function drawFEA(t, alpha) {
-      if (alpha <= 0) return;
-      ctx.save();
-      ctx.globalAlpha = alpha;
-
-      var cx = W * 0.5;
-      var cy = H * 0.48;
-      var sz = Math.min(W, H) * 0.38;
-      var deformTime = (t % 6000) / 6000;
-      var deformAmt = Math.sin(deformTime * Math.PI * 2) * 0.5 + 0.5; // 0 to 1
-
-      // L-bracket shape (nodes define the structure)
-      var bracketW = sz * 0.9;
-      var bracketH = sz * 0.8;
-
-      var cols = 14, rows = 12;
-      var nodes = [];
-
-      // Generate mesh nodes for L-shaped bracket
-      for (var row = 0; row <= rows; row++) {
-        nodes[row] = [];
-        for (var col = 0; col <= cols; col++) {
-          var nx = cx - bracketW * 0.4 + (col / cols) * bracketW;
-          var ny = cy - bracketH * 0.4 + (row / rows) * bracketH;
-
-          // L-shape mask: exclude top-right quadrant
-          var inShape = true;
-          var relX = col / cols;
-          var relY = row / rows;
-          if (relX > 0.45 && relY < 0.5) inShape = false;
-
-          // Apply deformation (load from right side, fixed at bottom-left)
-          var dx = 0, dy = 0;
-          var distFromFixed = relX;
-          if (inShape) {
-            var loadEffect = distFromFixed * deformAmt;
-            dx = loadEffect * sz * 0.03;
-            dy = loadEffect * relY * sz * 0.05 * deformAmt;
-          }
-
-          nodes[row][col] = {
-            x: nx + dx,
-            y: ny + dy,
-            inShape: inShape,
-            stress: inShape ? distFromFixed * (1 - relY * 0.3) : 0
-          };
-        }
-      }
-
-      // Draw mesh elements
-      for (var mr = 0; mr < rows; mr++) {
-        for (var mc = 0; mc < cols; mc++) {
-          var n0 = nodes[mr][mc];
-          var n1 = nodes[mr][mc + 1];
-          var n2 = nodes[mr + 1][mc + 1];
-          var n3 = nodes[mr + 1][mc];
-
-          if (!n0.inShape || !n1.inShape || !n2.inShape || !n3.inShape) continue;
-
-          var avgStress = (n0.stress + n1.stress + n2.stress + n3.stress) / 4;
-
-          // Stress color: blue → cyan → green → yellow → orange → red
-          var stressColor = getStressColor(avgStress * deformAmt);
-
-          ctx.beginPath();
-          ctx.moveTo(n0.x, n0.y);
-          ctx.lineTo(n1.x, n1.y);
-          ctx.lineTo(n2.x, n2.y);
-          ctx.lineTo(n3.x, n3.y);
-          ctx.closePath();
-          ctx.fillStyle = stressColor;
-          ctx.fill();
-
-          // Mesh lines
-          ctx.strokeStyle = 'rgba(31, 78, 121, 0.08)';
-          ctx.lineWidth = 0.5 * dpr;
-          ctx.stroke();
-        }
-      }
-
-      // Outline the bracket
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.15)';
-      ctx.lineWidth = 1.5 * dpr;
-      // Trace the outer boundary
-      var boundary = [];
-      // Bottom edge
-      for (var bc = 0; bc <= cols; bc++) {
-        if (nodes[rows][bc].inShape) boundary.push(nodes[rows][bc]);
-      }
-      if (boundary.length > 1) {
-        ctx.beginPath();
-        ctx.moveTo(boundary[0].x, boundary[0].y);
-        for (var bi = 1; bi < boundary.length; bi++) {
-          ctx.lineTo(boundary[bi].x, boundary[bi].y);
-        }
-        ctx.stroke();
-      }
-
-      // Fixed support symbol (hatching at left)
-      var fixX = cx - bracketW * 0.4;
-      var fixY1 = cy - bracketH * 0.4;
-      var fixY2 = cy + bracketH * 0.4;
       ctx.strokeStyle = 'rgba(31, 78, 121, 0.12)';
-      ctx.lineWidth = 1.5 * dpr;
-      ctx.beginPath();
-      ctx.moveTo(fixX, fixY1 + bracketH * 0.3);
-      ctx.lineTo(fixX, fixY2);
-      ctx.stroke();
-      // Hatches
-      for (var hy = fixY1 + bracketH * 0.3; hy <= fixY2; hy += 8 * dpr) {
+
+      for (var zi = -3; zi <= 3; zi++) {
+        var zPos = zi * (gridSpan / 3);
+        var pStart = project3D(transform3D(-90, floorY, zPos, pitch, yaw, 0), cx, cy, scale);
+        var pEnd = project3D(transform3D(90, floorY, zPos, pitch, yaw, 0), cx, cy, scale);
         ctx.beginPath();
-        ctx.moveTo(fixX, hy);
-        ctx.lineTo(fixX - 8 * dpr, hy + 8 * dpr);
+        ctx.moveTo(pStart.x, pStart.y);
+        ctx.lineTo(pEnd.x, pEnd.y);
         ctx.stroke();
       }
 
-      // Load arrow
-      var arrowX = cx + bracketW * 0.35;
-      var arrowY = cy + bracketH * 0.05;
-      ctx.strokeStyle = 'rgba(212, 48, 39, 0.25)';
-      ctx.fillStyle = 'rgba(212, 48, 39, 0.25)';
-      ctx.lineWidth = 2 * dpr;
-      ctx.beginPath();
-      ctx.moveTo(arrowX, arrowY - sz * 0.2);
-      ctx.lineTo(arrowX, arrowY + sz * 0.05);
-      ctx.stroke();
-      // Arrowhead
-      ctx.beginPath();
-      ctx.moveTo(arrowX, arrowY + sz * 0.08);
-      ctx.lineTo(arrowX - 5 * dpr, arrowY);
-      ctx.lineTo(arrowX + 5 * dpr, arrowY);
-      ctx.closePath();
-      ctx.fill();
-      // Force label
-      ctx.font = (8 * dpr) + 'px JetBrains Mono, monospace';
-      ctx.fillStyle = 'rgba(212, 48, 39, 0.3)';
-      ctx.textAlign = 'center';
-      ctx.fillText('F = 500 N', arrowX, arrowY - sz * 0.23);
+      for (var xi = -4; xi <= 4; xi++) {
+        var xPos = xi * (gridSpan / 4);
+        var p1 = project3D(transform3D(xPos, floorY, -gridSpan, pitch, yaw, 0), cx, cy, scale);
+        var p2 = project3D(transform3D(xPos, floorY, gridSpan, pitch, yaw, 0), cx, cy, scale);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
 
-      // Color legend
-      var legendX = cx + bracketW * 0.15;
-      var legendY = cy + bracketH * 0.52;
-      var legendW = sz * 0.5;
-      var legendH = 5 * dpr;
-      var legGrad = ctx.createLinearGradient(legendX, legendY, legendX + legendW, legendY);
-      legGrad.addColorStop(0, 'rgba(69, 117, 180, 0.3)');
-      legGrad.addColorStop(0.25, 'rgba(116, 173, 209, 0.3)');
-      legGrad.addColorStop(0.5, 'rgba(254, 224, 144, 0.3)');
-      legGrad.addColorStop(0.75, 'rgba(253, 174, 97, 0.3)');
-      legGrad.addColorStop(1, 'rgba(244, 109, 67, 0.3)');
-      ctx.fillStyle = legGrad;
-      ctx.fillRect(legendX, legendY, legendW, legendH);
-      ctx.strokeStyle = 'rgba(31, 78, 121, 0.1)';
-      ctx.lineWidth = 0.5 * dpr;
-      ctx.strokeRect(legendX, legendY, legendW, legendH);
+      // Minimal coordinate axes triad (pure lines, zero text labels)
+      var originP = project3D(transform3D(-80, floorY, -25, pitch, yaw, 0), cx, cy, scale);
+      var xAxisP = project3D(transform3D(-55, floorY, -25, pitch, yaw, 0), cx, cy, scale);
+      var yAxisP = project3D(transform3D(-80, floorY + 22, -25, pitch, yaw, 0), cx, cy, scale);
+      var zAxisP = project3D(transform3D(-80, floorY, 0, pitch, yaw, 0), cx, cy, scale);
 
-      ctx.font = (7 * dpr) + 'px JetBrains Mono, monospace';
-      ctx.fillStyle = 'rgba(31, 78, 121, 0.2)';
-      ctx.textAlign = 'left';
-      ctx.fillText('0 MPa', legendX, legendY + legendH + 10 * dpr);
-      ctx.textAlign = 'right';
-      ctx.fillText('250 MPa', legendX + legendW, legendY + legendH + 10 * dpr);
-      ctx.textAlign = 'center';
-      ctx.fillText('Von Mises Stress', legendX + legendW / 2, legendY - 5 * dpr);
+      ctx.lineWidth = 1.0 * dpr;
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+      ctx.beginPath(); ctx.moveTo(originP.x, originP.y); ctx.lineTo(xAxisP.x, xAxisP.y); ctx.stroke();
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+      ctx.beginPath(); ctx.moveTo(originP.x, originP.y); ctx.lineTo(yAxisP.x, yAxisP.y); ctx.stroke();
+      ctx.strokeStyle = 'rgba(37, 99, 235, 0.4)';
+      ctx.beginPath(); ctx.moveTo(originP.x, originP.y); ctx.lineTo(zAxisP.x, zAxisP.y); ctx.stroke();
 
       ctx.restore();
     }
 
-    function getStressColor(stress) {
-      stress = Math.max(0, Math.min(1, stress));
-      var stops = [
-        [0, 69, 117, 180],    // blue
-        [0.2, 116, 173, 209], // light blue
-        [0.4, 171, 217, 233], // cyan
-        [0.55, 254, 224, 144],// yellow
-        [0.75, 253, 174, 97], // orange
-        [1.0, 244, 109, 67]   // red
+    // ---- 2. Supersonic Bow Shock & Mach Cone (Contained & Scaled) ----
+    function drawBowShock(cx, cy, scale, shockAlpha, pitch, yaw, roll) {
+      if (shockAlpha <= 0.01) return;
+      ctx.save();
+
+      var apex3D = transform3D(NOSE_TIP_X + 8, 0, 0, pitch, yaw, roll);
+      var apexP = project3D(apex3D, cx, cy, scale);
+
+      var kFactor = 0.055;
+      var shockSpans = [115, 95, 68];
+      var shockColors = [
+        'rgba(37, 99, 235, ' + (shockAlpha * 0.12) + ')',
+        'rgba(6, 182, 212, ' + (shockAlpha * 0.35) + ')',
+        'rgba(245, 158, 11, ' + (shockAlpha * 0.45) + ')'
       ];
 
-      for (var si = 0; si < stops.length - 1; si++) {
-        if (stress >= stops[si][0] && stress <= stops[si + 1][0]) {
-          var t2 = (stress - stops[si][0]) / (stops[si + 1][0] - stops[si][0]);
-          var r = Math.round(stops[si][1] + (stops[si + 1][1] - stops[si][1]) * t2);
-          var g = Math.round(stops[si][2] + (stops[si + 1][2] - stops[si][2]) * t2);
-          var b = Math.round(stops[si][3] + (stops[si + 1][3] - stops[si][3]) * t2);
-          return 'rgba(' + r + ',' + g + ',' + b + ', 0.12)';
+      for (var s = 0; s < shockSpans.length; s++) {
+        var maxSpan = shockSpans[s];
+        var ptsTop = [];
+        var ptsBot = [];
+        var numPts = 18;
+
+        for (var i = 0; i <= numPts; i++) {
+          var spanR = (i / numPts) * maxSpan;
+          var xDist = Math.pow(spanR / 8, 1.55) * kFactor * 20;
+          var xPos = (NOSE_TIP_X + 8) - xDist;
+
+          var pTop3 = transform3D(xPos, spanR * 0.9, spanR * 0.25, pitch, yaw, roll);
+          var pBot3 = transform3D(xPos, -spanR * 0.9, -spanR * 0.25, pitch, yaw, roll);
+
+          ptsTop.push(project3D(pTop3, cx, cy, scale));
+          ptsBot.push(project3D(pBot3, cx, cy, scale));
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(ptsTop[ptsTop.length - 1].x, ptsTop[ptsTop.length - 1].y);
+        for (var j = ptsTop.length - 2; j >= 0; j--) {
+          ctx.lineTo(ptsTop[j].x, ptsTop[j].y);
+        }
+        ctx.lineTo(apexP.x, apexP.y);
+        for (var k = 0; k < ptsBot.length; k++) {
+          ctx.lineTo(ptsBot[k].x, ptsBot[k].y);
+        }
+
+        ctx.strokeStyle = shockColors[s];
+        ctx.lineWidth = (s === 1 ? 1.4 : 0.9) * dpr;
+        ctx.stroke();
+
+        if (s === 2) {
+          ctx.fillStyle = 'rgba(245, 158, 11, ' + (shockAlpha * 0.08) + ')';
+          ctx.fill();
         }
       }
-      return 'rgba(244, 109, 67, 0.12)';
+
+      // Detached Stagnation Point compression bulb
+      var bulbRadius = 15 * dpr * (scale / 1.2);
+      var stagGrad = ctx.createRadialGradient(apexP.x, apexP.y, 1 * dpr, apexP.x, apexP.y, bulbRadius);
+      stagGrad.addColorStop(0, 'rgba(254, 240, 138, ' + (shockAlpha * 0.7) + ')');
+      stagGrad.addColorStop(0.35, 'rgba(245, 158, 11, ' + (shockAlpha * 0.4) + ')');
+      stagGrad.addColorStop(0.7, 'rgba(6, 182, 212, ' + (shockAlpha * 0.15) + ')');
+      stagGrad.addColorStop(1, 'rgba(37, 99, 235, 0)');
+      ctx.fillStyle = stagGrad;
+      ctx.beginPath();
+      ctx.arc(apexP.x, apexP.y, bulbRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
     }
 
-    /* -------- Main render loop -------- */
+    // ---- 3. Aerodynamic Streamlines Along Diagonal Flow ----
+    function updateAndDrawStreamlines(cx, cy, scale, flowAlpha, pitch, yaw, roll) {
+      if (flowAlpha <= 0.01) return;
+      ctx.save();
+      ctx.globalAlpha = flowAlpha;
+
+      var nose3D = transform3D(NOSE_TIP_X, 0, 0, pitch, yaw, roll);
+      var noseP = project3D(nose3D, cx, cy, scale);
+      var aft3D = transform3D(NOZZLE_EXIT_X, 0, 0, pitch, yaw, roll);
+      var aftP = project3D(aft3D, cx, cy, scale);
+
+      var bodyRadiusPx = BODY_RADIUS * scale * 1.8;
+
+      for (var i = 0; i < flowParticles.length; i++) {
+        var p = flowParticles[i];
+
+        p.x += p.vx * dpr;
+        p.y += p.vy * dpr;
+
+        // Vector from rocket center to particle
+        var dxC = p.x - (noseP.x + aftP.x) * 0.5;
+        var dyC = p.y - (noseP.y + aftP.y) * 0.5;
+
+        // Project particle onto lateral axis perpendicular to flow
+        var lateralDist = dxC * (-DIR_FLOW_Y) + dyC * (DIR_FLOW_X);
+
+        // Check if particle is near fuselage length
+        var distToNose = (p.x - noseP.x) * DIR_FLOW_X + (p.y - noseP.y) * DIR_FLOW_Y;
+        var distToAft = (p.x - aftP.x) * DIR_FLOW_X + (p.y - aftP.y) * DIR_FLOW_Y;
+
+        if (distToNose > -30 * scale && distToAft < 25 * scale) {
+          if (Math.abs(lateralDist) < bodyRadiusPx * 1.8) {
+            var push = (1 - Math.abs(lateralDist) / (bodyRadiusPx * 1.8)) * 1.6 * dpr;
+            var pushSign = lateralDist >= 0 ? 1 : -1;
+            p.x += (-DIR_FLOW_Y) * pushSign * push;
+            p.y += (DIR_FLOW_X) * pushSign * push;
+          }
+        }
+
+        p.trail.push({ x: p.x, y: p.y });
+        if (p.trail.length > p.maxTrail) {
+          p.trail.shift();
+        }
+
+        // Recycle when off-screen
+        if (p.x < -30 || p.y > H + 30 || p.x > W + 60 || p.y < -40) {
+          flowParticles[i] = createFlowParticle(false);
+          continue;
+        }
+
+        // Draw streamline
+        if (p.trail.length >= 2) {
+          var isNearVehicle = Math.abs(lateralDist) < bodyRadiusPx * 2.2 && distToNose > -20 * scale && distToAft < 20 * scale;
+          var strokeCol = isNearVehicle
+            ? 'rgba(6, 182, 212, ' + (0.85 * flowAlpha) + ')'
+            : 'rgba(37, 99, 235, ' + (0.4 * flowAlpha) + ')';
+
+          ctx.beginPath();
+          ctx.moveTo(p.trail[0].x, p.trail[0].y);
+          for (var t = 1; t < p.trail.length; t++) {
+            ctx.lineTo(p.trail[t].x, p.trail[t].y);
+          }
+          ctx.strokeStyle = strokeCol;
+          ctx.lineWidth = (isNearVehicle ? 1.3 : 0.8) * dpr;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+
+          // Particle head
+          var head = p.trail[p.trail.length - 1];
+          ctx.beginPath();
+          ctx.arc(head.x, head.y, (isNearVehicle ? 1.8 : 1.1) * dpr, 0, Math.PI * 2);
+          ctx.fillStyle = isNearVehicle ? '#E0F2FE' : '#38BDF8';
+          ctx.fill();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    // ---- 4. 3D Rocket Body, Fins, and Structural Detailing ----
+    function drawRocket3D(cx, cy, scale, revealPct, bodyAlpha, pitch, yaw, roll) {
+      if (bodyAlpha <= 0.01 || revealPct <= 0) return;
+      ctx.save();
+
+      var numAngularSegs = 20;
+      var lightDir = { x: 0.35, y: 0.8, z: 0.48 };
+      var lLen = Math.sqrt(lightDir.x * lightDir.x + lightDir.y * lightDir.y + lightDir.z * lightDir.z);
+      lightDir.x /= lLen; lightDir.y /= lLen; lightDir.z /= lLen;
+
+      var totalLen = NOSE_TIP_X - NOZZLE_EXIT_X;
+      var currentRevealX = NOZZLE_EXIT_X + totalLen * revealPct;
+
+      var polygons = [];
+
+      // Fuselage & Nozzle surface facets
+      for (var si = 0; si < rocketStations.length - 1; si++) {
+        var stA = rocketStations[si];
+        var stB = rocketStations[si + 1];
+
+        if (stB.x > currentRevealX) continue;
+
+        for (var a = 0; a < numAngularSegs; a++) {
+          var th1 = (a / numAngularSegs) * Math.PI * 2;
+          var th2 = ((a + 1) / numAngularSegs) * Math.PI * 2;
+
+          var yA1 = stA.r * Math.cos(th1), zA1 = stA.r * Math.sin(th1);
+          var yA2 = stA.r * Math.cos(th2), zA2 = stA.r * Math.sin(th2);
+          var yB1 = stB.r * Math.cos(th1), zB1 = stB.r * Math.sin(th1);
+          var yB2 = stB.r * Math.cos(th2), zB2 = stB.r * Math.sin(th2);
+
+          var p1_3d = transform3D(stA.x, yA1, zA1, pitch, yaw, roll);
+          var p2_3d = transform3D(stA.x, yA2, zA2, pitch, yaw, roll);
+          var p3_3d = transform3D(stB.x, yB2, zB2, pitch, yaw, roll);
+          var p4_3d = transform3D(stB.x, yB1, zB1, pitch, yaw, roll);
+
+          var avgZ = (p1_3d.z + p2_3d.z + p3_3d.z + p4_3d.z) / 4;
+
+          var midTheta = (th1 + th2) * 0.5;
+          var normLocal = {
+            x: (stB.r - stA.r) / Math.max(1, (stA.x - stB.x)),
+            y: Math.cos(midTheta),
+            z: Math.sin(midTheta)
+          };
+          var normLen = Math.sqrt(normLocal.x * normLocal.x + normLocal.y * normLocal.y + normLocal.z * normLocal.z);
+          normLocal.x /= normLen; normLocal.y /= normLen; normLocal.z /= normLen;
+
+          var norm3d = transform3D(normLocal.x, normLocal.y, normLocal.z, pitch, yaw, roll);
+          var facingCam = norm3d.z;
+          var isNozzle = (stB.type === 'nozzle-exit' || stB.type === 'nozzle-throat');
+
+          if (facingCam < -0.15 && !isNozzle) continue;
+
+          var diff = Math.max(0.12, norm3d.x * lightDir.x + norm3d.y * lightDir.y + norm3d.z * lightDir.z);
+          var spec = Math.pow(Math.max(0, norm3d.y * 0.8 + norm3d.z * 0.6), 10) * 0.55;
+
+          polygons.push({
+            type: 'fuselage',
+            sectionType: stA.type,
+            pts: [
+              project3D(p1_3d, cx, cy, scale),
+              project3D(p2_3d, cx, cy, scale),
+              project3D(p3_3d, cx, cy, scale),
+              project3D(p4_3d, cx, cy, scale)
+            ],
+            avgZ: avgZ,
+            diff: diff,
+            spec: spec
+          });
+        }
+      }
+
+      // 4 Aerodynamic Control Fins
+      var finAngles = [0, Math.PI * 0.5, Math.PI, Math.PI * 1.5];
+      for (var f = 0; f < finAngles.length; f++) {
+        var baseAngle = finAngles[f];
+        var cosF = Math.cos(baseAngle), sinF = Math.sin(baseAngle);
+
+        var rootFront = { x: FIN_X_ROOT_FRONT, y: BODY_RADIUS * cosF, z: BODY_RADIUS * sinF };
+        var rootBack = { x: FIN_X_ROOT_BACK, y: BODY_RADIUS * cosF, z: BODY_RADIUS * sinF };
+        var tipBack = { x: FIN_X_TIP_BACK, y: (BODY_RADIUS + FIN_SPAN) * cosF, z: (BODY_RADIUS + FIN_SPAN) * sinF };
+        var tipFront = { x: FIN_X_TIP_FRONT, y: (BODY_RADIUS + FIN_SPAN) * cosF, z: (BODY_RADIUS + FIN_SPAN) * sinF };
+
+        if (rootBack.x > currentRevealX) continue;
+
+        var f1 = transform3D(rootFront.x, rootFront.y, rootFront.z, pitch, yaw, roll);
+        var f2 = transform3D(tipFront.x, tipFront.y, tipFront.z, pitch, yaw, roll);
+        var f3 = transform3D(tipBack.x, tipBack.y, tipBack.z, pitch, yaw, roll);
+        var f4 = transform3D(rootBack.x, rootBack.y, rootBack.z, pitch, yaw, roll);
+
+        var finAvgZ = (f1.z + f2.z + f3.z + f4.z) / 4;
+        var normFinLocal = { x: 0, y: -sinF, z: cosF };
+        var normFin3D = transform3D(normFinLocal.x, normFinLocal.y, normFinLocal.z, pitch, yaw, roll);
+        var finDiff = Math.max(0.25, Math.abs(normFin3D.x * lightDir.x + normFin3D.y * lightDir.y + normFin3D.z * lightDir.z));
+
+        polygons.push({
+          type: 'fin',
+          pts: [
+            project3D(f1, cx, cy, scale),
+            project3D(f2, cx, cy, scale),
+            project3D(f3, cx, cy, scale),
+            project3D(f4, cx, cy, scale)
+          ],
+          avgZ: finAvgZ,
+          diff: finDiff
+        });
+      }
+
+      // Painter's sorting (back to front)
+      polygons.sort(function (a, b) { return a.avgZ - b.avgZ; });
+
+      // Draw all polygons
+      for (var p = 0; p < polygons.length; p++) {
+        var poly = polygons[p];
+        var pts = poly.pts;
+
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (var pi = 1; pi < pts.length; pi++) {
+          ctx.lineTo(pts[pi].x, pts[pi].y);
+        }
+        ctx.closePath();
+
+        if (poly.type === 'fin') {
+          var rFin = Math.round(30 + poly.diff * 35);
+          var gFin = Math.round(90 + poly.diff * 60);
+          var bFin = Math.round(200 + poly.diff * 55);
+          ctx.fillStyle = 'rgba(' + rFin + ',' + gFin + ',' + bFin + ',' + (bodyAlpha * 0.95) + ')';
+          ctx.fill();
+
+          ctx.strokeStyle = 'rgba(255, 255, 255, ' + (bodyAlpha * 0.4) + ')';
+          ctx.lineWidth = 0.8 * dpr;
+          ctx.stroke();
+        } else {
+          var rBase, gBase, bBase;
+
+          if (poly.sectionType === 'nose') {
+            rBase = Math.round(25 + poly.diff * 35 + poly.spec * 70);
+            gBase = Math.round(40 + poly.diff * 50 + poly.spec * 80);
+            bBase = Math.round(65 + poly.diff * 65 + poly.spec * 100);
+          } else if (poly.sectionType === 'nozzle-exit' || poly.sectionType === 'nozzle-throat') {
+            rBase = Math.round(75 + poly.diff * 60);
+            gBase = Math.round(65 + poly.diff * 50);
+            bBase = Math.round(55 + poly.diff * 40);
+          } else {
+            rBase = Math.round(180 + poly.diff * 60 + poly.spec * 15);
+            gBase = Math.round(195 + poly.diff * 55 + poly.spec * 15);
+            bBase = Math.round(215 + poly.diff * 40 + poly.spec * 15);
+          }
+
+          ctx.fillStyle = 'rgba(' + rBase + ',' + gBase + ',' + bBase + ',' + (bodyAlpha * 0.92) + ')';
+          ctx.fill();
+
+          ctx.strokeStyle = 'rgba(31, 78, 121, ' + (bodyAlpha * 0.08) + ')';
+          ctx.lineWidth = 0.4 * dpr;
+          ctx.stroke();
+        }
+      }
+
+      // Circumferential panel rings
+      if (revealPct > 0.4) {
+        var seamPositions = [22, 0, -20, -38];
+        ctx.strokeStyle = 'rgba(37, 99, 235, ' + (bodyAlpha * 0.25) + ')';
+        ctx.lineWidth = 0.8 * dpr;
+
+        for (var sm = 0; sm < seamPositions.length; sm++) {
+          var sX = seamPositions[sm];
+          if (sX > currentRevealX) continue;
+
+          ctx.beginPath();
+          var first = true;
+          for (var a2 = 0; a2 <= numAngularSegs; a2++) {
+            var th = (a2 / numAngularSegs) * Math.PI * 2;
+            var yS = BODY_RADIUS * 1.01 * Math.cos(th);
+            var zS = BODY_RADIUS * 1.01 * Math.sin(th);
+            var pRing3 = transform3D(sX, yS, zS, pitch, yaw, roll);
+
+            if (pRing3.z >= -BODY_RADIUS * 0.4) {
+              var pr = project3D(pRing3, cx, cy, scale);
+              if (first) {
+                ctx.moveTo(pr.x, pr.y);
+                first = false;
+              } else {
+                ctx.lineTo(pr.x, pr.y);
+              }
+            } else {
+              first = true;
+            }
+          }
+          ctx.stroke();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    // ---- 5. Proportional, Safe-Bounded Engine Plume & Shock Diamonds ----
+    function updateAndDrawEngineExhaust(cx, cy, scale, exhaustAlpha, pitch, yaw, roll) {
+      if (exhaustAlpha <= 0.01) return;
+      ctx.save();
+
+      var nozzleExit3D = transform3D(NOZZLE_EXIT_X, 0, 0, pitch, yaw, roll);
+      var nozzleP = project3D(nozzleExit3D, cx, cy, scale);
+
+      // Vector pointing back into exhaust stream
+      var plumeEnd3D = transform3D(NOZZLE_EXIT_X - 85, 0, 0, pitch, yaw, roll);
+      var plumeEndP = project3D(plumeEnd3D, cx, cy, scale);
+
+      var dxAxis = plumeEndP.x - nozzleP.x;
+      var dyAxis = plumeEndP.y - nozzleP.y;
+      var plumeLen = Math.sqrt(dxAxis * dxAxis + dyAxis * dyAxis);
+      var ux = dxAxis / Math.max(1, plumeLen);
+      var uy = dyAxis / Math.max(1, plumeLen);
+      var perpX = -uy;
+      var perpY = ux;
+
+      var flameWidth = NOZZLE_EXIT_R * 1.4 * scale;
+      var flameLength = 75 * scale;
+
+      // Exhaust flame envelope
+      var flameGrad = ctx.createLinearGradient(nozzleP.x, nozzleP.y, nozzleP.x + ux * flameLength, nozzleP.y + uy * flameLength);
+      flameGrad.addColorStop(0, 'rgba(255, 255, 255, ' + (exhaustAlpha * 1.0) + ')');
+      flameGrad.addColorStop(0.15, 'rgba(14, 165, 233, ' + (exhaustAlpha * 0.95) + ')');
+      flameGrad.addColorStop(0.35, 'rgba(6, 182, 212, ' + (exhaustAlpha * 0.9) + ')');
+      flameGrad.addColorStop(0.65, 'rgba(245, 158, 11, ' + (exhaustAlpha * 0.85) + ')');
+      flameGrad.addColorStop(0.85, 'rgba(239, 68, 68, ' + (exhaustAlpha * 0.6) + ')');
+      flameGrad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+
+      ctx.beginPath();
+      ctx.moveTo(nozzleP.x + perpX * flameWidth * 0.5, nozzleP.y + perpY * flameWidth * 0.5);
+      ctx.quadraticCurveTo(
+        nozzleP.x + ux * flameLength * 0.4 + perpX * flameWidth * 0.75,
+        nozzleP.y + uy * flameLength * 0.4 + perpY * flameWidth * 0.75,
+        nozzleP.x + ux * flameLength,
+        nozzleP.y + uy * flameLength
+      );
+      ctx.quadraticCurveTo(
+        nozzleP.x + ux * flameLength * 0.4 - perpX * flameWidth * 0.75,
+        nozzleP.y + uy * flameLength * 0.4 - perpY * flameWidth * 0.75,
+        nozzleP.x - perpX * flameWidth * 0.5,
+        nozzleP.y - perpY * flameWidth * 0.5
+      );
+      ctx.closePath();
+      ctx.fillStyle = flameGrad;
+      ctx.fill();
+
+      // Supersonic Shock Diamonds (Mach disks)
+      var numDiamonds = 3;
+      var diamondSpacing = 14 * scale;
+
+      for (var d = 1; d <= numDiamonds; d++) {
+        var dDist = d * diamondSpacing;
+        var dCx = nozzleP.x + ux * dDist;
+        var dCy = nozzleP.y + uy * dDist;
+        var dW = (diamondSpacing * 0.4) * (1 - d * 0.15);
+        var dH = (flameWidth * 0.3) * (1 - d * 0.18);
+
+        ctx.beginPath();
+        ctx.moveTo(dCx - ux * dW, dCy - uy * dW);
+        ctx.lineTo(dCx + perpX * dH, dCy + perpY * dH);
+        ctx.lineTo(dCx + ux * dW, dCy + uy * dW);
+        ctx.lineTo(dCx - perpX * dH, dCy - perpY * dH);
+        ctx.closePath();
+
+        ctx.fillStyle = 'rgba(255, 255, 255, ' + (exhaustAlpha * (0.9 - d * 0.15)) + ')';
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(56, 189, 248, ' + (exhaustAlpha * 0.7) + ')';
+        ctx.lineWidth = 0.7 * dpr;
+        ctx.stroke();
+      }
+
+      // Exhaust Particles (trailing safely within canvas)
+      for (var ep = 0; ep < exhaustParticles.length; ep++) {
+        var p = exhaustParticles[ep];
+
+        if (!p.active || p.life <= 0) {
+          var spread = (Math.random() - 0.5) * flameWidth * 0.5;
+          p.x = nozzleP.x + perpX * spread;
+          p.y = nozzleP.y + perpY * spread;
+          var speed = (2.8 + Math.random() * 4.2) * dpr;
+          p.vx = ux * speed + (Math.random() - 0.5) * 1.2 * dpr;
+          p.vy = uy * speed + (Math.random() - 0.5) * 1.2 * dpr;
+          p.life = p.maxLife;
+          p.size = (1.5 + Math.random() * 2.8) * dpr;
+          p.active = true;
+          continue;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+        p.size *= 1.02;
+        p.life -= 0.025;
+
+        var lifeRatio = p.life / p.maxLife;
+        var partAlpha = lifeRatio * exhaustAlpha * 0.6;
+
+        var rCol, gCol, bCol;
+        if (lifeRatio > 0.65) {
+          rCol = 224; gCol = 242; bCol = 254;
+        } else if (lifeRatio > 0.3) {
+          rCol = 245; gCol = 158; bCol = 11;
+        } else {
+          rCol = 239; gCol = 68; bCol = 68;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + rCol + ',' + gCol + ',' + bCol + ',' + partAlpha + ')';
+        ctx.fill();
+      }
+
+      // Sparks
+      for (var sp = 0; sp < sparkParticles.length; sp++) {
+        var spark = sparkParticles[sp];
+        if (!spark.active || spark.life <= 0) {
+          spark.x = nozzleP.x;
+          spark.y = nozzleP.y;
+          var spSpeed = (4 + Math.random() * 5.5) * dpr;
+          var spAngle = (Math.random() - 0.5) * 0.45;
+          spark.vx = (ux * Math.cos(spAngle) + perpX * Math.sin(spAngle)) * spSpeed;
+          spark.vy = (uy * Math.cos(spAngle) + perpY * Math.sin(spAngle)) * spSpeed;
+          spark.life = spark.maxLife;
+          spark.size = (1.0 + Math.random() * 1.2) * dpr;
+          spark.active = true;
+          continue;
+        }
+
+        spark.x += spark.vx;
+        spark.y += spark.vy;
+        spark.life -= 0.04;
+
+        ctx.beginPath();
+        ctx.arc(spark.x, spark.y, spark.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(254, 240, 138, ' + (spark.life * exhaustAlpha) + ')';
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    // ---- Main Animation Loop ----
     function frame(now) {
       if (!running) return;
       var elapsed = now - startTime;
+      var info = getPhaseInfo(elapsed);
 
       ctx.clearRect(0, 0, W, H);
 
-      var a1 = getSceneOpacity(elapsed, 0);
-      var a2 = getSceneOpacity(elapsed, 1);
-      var a3 = getSceneOpacity(elapsed, 2);
+      // Centered with comfortable safe margin on all sides
+      var centerX = W * 0.50;
+      var centerY = H * 0.48;
 
-      drawGear(elapsed, a1);
-      drawDroneCFD(elapsed, a2);
-      drawFEA(elapsed, a3);
+      // Scale reduced by ~25% from original (fits inside container with zero clipping)
+      var scale = Math.min(W / 520, H / 440) * 1.12;
+
+      // Base 3D orientation:
+      // - Pitch: 0.48 rad (~ +27.5 deg) -> points nose UPWARD toward UPPER-RIGHT
+      // - Yaw: 0.35 rad (~ 20 deg) -> classic 3/4 engineering perspective
+      // - Roll: 0.22 rad (~ 12.5 deg) -> elegant fin presentation
+      var basePitch = 0.48;
+      var baseYaw = 0.35;
+      var baseRoll = 0.22;
+
+      var revealPct = 1.0;
+      var gridAlpha = 0.0;
+      var shockAlpha = 0.0;
+      var flowAlpha = 0.0;
+      var bodyAlpha = 1.0;
+      var exhaustAlpha = 0.0;
+
+      var currentPitch = basePitch;
+      var currentYaw = baseYaw;
+      var currentRoll = baseRoll;
+
+      // Phase 0: Technical Reveal (Grid & Wireframe scan)
+      if (info.phase === 0) {
+        var t0 = easeInOut(info.t);
+        gridAlpha = t0 * 0.6;
+        revealPct = t0;
+        bodyAlpha = t0;
+      }
+      // Phase 1: 3D Controlled Inspection (Gentle rotational movement)
+      else if (info.phase === 1) {
+        gridAlpha = 0.45;
+        revealPct = 1.0;
+        bodyAlpha = 1.0;
+        currentYaw = baseYaw + Math.sin(info.t * Math.PI) * 0.4;
+        currentRoll = baseRoll + Math.sin(info.t * Math.PI) * 0.25;
+        currentPitch = basePitch + Math.sin(info.t * Math.PI * 2) * 0.04;
+        shockAlpha = 0.15 * info.t;
+        flowAlpha = 0.25 * info.t;
+      }
+      // Phase 2: CFD Flow Activation & Supersonic Bow Shock
+      else if (info.phase === 2) {
+        var t2 = easeOut(info.t);
+        gridAlpha = 0.35;
+        revealPct = 1.0;
+        bodyAlpha = 1.0;
+        shockAlpha = t2;
+        flowAlpha = t2;
+        exhaustAlpha = 0.12 * t2;
+      }
+      // Phase 3: Engine Plume Ignition & Shock Diamonds
+      else if (info.phase === 3) {
+        var igT = easeOut(Math.min(1, info.t * 2.2));
+        gridAlpha = 0.25;
+        revealPct = 1.0;
+        bodyAlpha = 1.0;
+        shockAlpha = 1.0;
+        flowAlpha = 1.0;
+        exhaustAlpha = igT;
+        // Subtle thrust jitter
+        currentPitch = basePitch + (Math.random() - 0.5) * 0.006;
+        currentYaw = baseYaw + (Math.random() - 0.5) * 0.006;
+      }
+      // Phase 4: Seamless Loop Transition
+      else if (info.phase === 4) {
+        var t4 = easeInOut(info.t);
+        gridAlpha = 0.25 * (1 - t4);
+        revealPct = 1.0 - t4 * 0.35;
+        bodyAlpha = 1.0 - t4 * 0.5;
+        shockAlpha = 1.0 - t4;
+        flowAlpha = 0.7 * (1 - t4);
+        exhaustAlpha = 0.7 * (1 - t4);
+      }
+
+      // Draw all elements in depth order (NO TEXT, PURELY GRAPHICAL)
+      drawEngineeringGrid(centerX, centerY, scale, gridAlpha, currentPitch, currentYaw);
+      drawBowShock(centerX, centerY, scale, shockAlpha, currentPitch, currentYaw, currentRoll);
+      updateAndDrawStreamlines(centerX, centerY, scale, flowAlpha, currentPitch, currentYaw, currentRoll);
+      drawRocket3D(centerX, centerY, scale, revealPct, bodyAlpha, currentPitch, currentYaw, currentRoll);
+      updateAndDrawEngineExhaust(centerX, centerY, scale, exhaustAlpha, currentPitch, currentYaw, currentRoll);
 
       requestAnimationFrame(frame);
     }
 
-    /* -------- Static fallback for reduced motion -------- */
+    // Static fallback for reduced motion
     function drawStatic() {
       resize();
       ctx.clearRect(0, 0, W, H);
-      drawGear(0, 0.8);
+      var centerX = W * 0.50;
+      var centerY = H * 0.48;
+      var scale = Math.min(W / 520, H / 440) * 1.12;
+      drawEngineeringGrid(centerX, centerY, scale, 0.4, 0.48, 0.35);
+      drawBowShock(centerX, centerY, scale, 0.7, 0.48, 0.35, 0.22);
+      drawRocket3D(centerX, centerY, scale, 1.0, 0.95, 0.48, 0.35, 0.22);
     }
 
     if (reducedMotion) {
@@ -1160,16 +1397,18 @@
     }
 
     resize();
-    initFlowParticles();
-    window.addEventListener('resize', function () {
-      resize();
-      initFlowParticles();
-    });
+    window.addEventListener('resize', resize);
     requestAnimationFrame(frame);
 
     return {
       pause: function () { running = false; },
-      resume: function () { if (!running) { running = true; requestAnimationFrame(frame); } },
+      resume: function () {
+        if (!running) {
+          running = true;
+          startTime = performance.now() - (startTime > 0 ? 0 : 0);
+          requestAnimationFrame(frame);
+        }
+      },
       destroy: function () { running = false; }
     };
   }
